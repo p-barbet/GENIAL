@@ -1,0 +1,7 @@
+#FILE	SEQUENCE	START	END	GENE	COVERAGE	COVERAGE_MAP	GAPS	%COVERAGE	%IDENTITY	DATABASE	ACCESSION	PRODUCT
+11CEB145STA	11CEB145STA_3	18252	19022	aadD_1|aminoglycoside	1-771/771	===============	0/0	100.00	99.74	resfinder_F	AF181950	aminoglycoside
+11CEB145STA	11CEB145STA_3	28653	30659	mecA_6|betalactam	1-2007/2007	===============	0/0	100.00	100.00	resfinder_F	BX571856	betalactam
+11CEB145STA	11CEB145STA_3	39701	40432	erm(A)_1|macrolide	1-732/732	===============	0/0	100.00	100.00	resfinder_F	X03216	macrolide
+11CEB145STA	11CEB145STA_3	40558	41340	spc_1|aminoglycoside	1-783/783	===============	0/0	100.00	100.00	resfinder_F	X02588	aminoglycoside
+11CEB145STA	11CEB145STA_3	459143	461062	tet(M)_7|tetracycline	1-1920/1920	===============	0/0	100.00	100.00	resfinder_F	FN433596	tetracycline
+11CEB145STA	11CEB145STA_6	400	1839	aac(6')-aph(2'')_1|aminoglycoside	1-1440/1440	===============	0/0	100.00	100.00	resfinder_F	M13771	aminoglycoside
