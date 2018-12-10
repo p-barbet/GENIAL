@@ -174,13 +174,21 @@ def main():
 	
 	fasta_files = get_fasta_paths(Arguments.input) # récupère la liste des fichers fasta
 
-	setup_private_db(Arguments.private_database, Arguments.private_db_path, Arguments.private_db_fasta)
+	if Arguments.private_database is not None :
 
-	#abricate_files = run_ABRicate(fasta_files, Arguments.default_database, Arguments.mincov, Arguments.minid, DIR_ANALYSIS, Arguments.nb_tread) # lance Abricate pour toutes les souches
+		setup_private_db(Arguments.private_database, Arguments.private_db_path, Arguments.private_db_fasta)
+		DATABASE_NAME = Arguments.private_database
+
+	else :
+		DATABASE_NAME = Arguments.default_database
+
+	abricate_files = run_ABRicate(fasta_files, DATABASE_NAME, Arguments.mincov, Arguments.minid, DIR_ANALYSIS, Arguments.nb_tread) # lance Abricate pour toutes les souches
 	
-	#get_abricate_files_list(DIR, abricate_files, Arguments.output_file) # créer un fichier avec les liste des fichiers résultats de l'analyse ABricate et les IDs des souches 
+	get_abricate_files_list(DIR, abricate_files, Arguments.output_file) # créer un fichier avec les liste des fichiers résultats de l'analyse ABricate et les IDs des souches 
 	
-	uninstall_private_db(Arguments.private_database, Arguments.private_db_path)
+	if Arguments.private_database is not None :
+
+		uninstall_private_db(Arguments.private_database, Arguments.private_db_path)
 
 	t2 = time.time()
 
