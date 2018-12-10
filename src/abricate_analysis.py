@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 import os, sys, time
 import argparse
 import pandas as pd
@@ -9,23 +9,38 @@ def get_parser() :
 	# Fonction permettant de pourvoir demander des arguments
 
 	parser = argparse.ArgumentParser(description= \
-		'Find ARM, virulence and toxin genes running ABRicate')
+		'Find ARM, virulence and toxin genes running ABRicate', \
+			formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 	parser.add_argument('-f', action="store", dest='input', 
 					type=str, required=True, help='tsv file with FASTA files paths and strains IDs (REQUIRED)')
 
-	parser.add_argument('-db', action="store", dest='db_name', \
-						type=str, default='resfinder', help='database to use (resfinder, card, \
-							argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi) (default:resfinder)')
+	db_type = parser.add_mutually_exclusive_group(required=True)
+
+	db_type.add_argument('--defaultdb', action="store", dest='default_database', \
+						type=str, choices=['resfinder', 'card',	'argannot', 'ecoh', \
+							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi'], help='default \
+								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)')
+
+	db_type.add_argument('--privatedb', action="store", dest='private_database', \
+						type=str, help='private database name. Implies -dbp, -dbf. Incompatible with --defaultdb')
+
+	parser.add_argument('-dbp', action="store", dest='private_db_path', \
+						type=str, help='path to abricate \
+							databases repertory. Implies -dbf, --privatedb')	
+
+	parser.add_argument('-dbf', action="store", dest='private_db_fasta', \
+						type=str, help='Multifasta containing \
+							the private database sequences. Implies -dbp, --privatedb')	
 
 	parser.add_argument('-T', action="store", dest='nb_tread', 
-					type=str, default=1, help='number of theard to use (default:1)')
+					type=str, default=1, help='number of theard to use')
 
 	parser.add_argument('-w', action="store", dest='workdir', 
-		type=str, default='.', help='working directory (default:current directory)')
+		type=str, default='.', help='working directory')
 
-	parser.add_argument('-r', action="store", dest='dirres', 
-					type=str, default='ABRicate_results', help='results directory name (default:ABRicate_results)')
+	parser.add_argument('-r', action="store", dest='resdir', 
+					type=str, default='ABRicate_results', help='results directory name')
 
 	parser.add_argument('--mincov', action="store", dest='mincov', \
 						type=str, default='80', help='Minimum proportion of gene covered')
@@ -34,7 +49,7 @@ def get_parser() :
 						type=str, default='90', help='Minimum proportion of exact nucleotide matches')
 
 	parser.add_argument('-o', action="store", dest='output_file', \
-						type=str, default='ABRicate_files.tsv', help='output file name (default:ABRicate_files.tsv)')
+						type=str, default='ABRicate_files.tsv', help='output file name')
 
 	return parser
 
@@ -58,10 +73,23 @@ def get_fasta_paths(input_file) :
 	return dico_fasta
 
 
+def setup_private_db(db_name, abricate_dbs_repertory, db_multifasta) :
+
+	if abricate_dbs_repertory[-1] != '/' :
+		abricate_dbs_repertory += '/'
+
+	if not os.path.exists(abricate_dbs_repertory + db_name) :
+		os.system("mkdir " + abricate_dbs_repertory + db_name)
+	else : 
+		sys.exit("La base de donnée " + db_name + " existe déjà")
+
+	os.system("cp " + db_multifasta + " " + abricate_dbs_repertory + db_name)
+
+	os.system("abricate --setupdb")
+
+
 def run_ABRicate(fasta_files, db_name, mincov, minid, dir_analysis, nb_threads) :
 # Fonction qui lance ABRicate pour chaque souche (par défaut mincov = 80 et minid = 90)
-
-	db_name = db_name.lower() # met le nom de la base de données en minuscules
 
 	abricate_files = {} 
 
@@ -81,31 +109,6 @@ def run_ABRicate(fasta_files, db_name, mincov, minid, dir_analysis, nb_threads) 
 
 	return abricate_files
 
-#def fonction_qui_modifie_les_fichiers_abricate() : 
-
-
-# def get_summaries(abricate_files, dir_summaries) :
-# # Fonction qui réalise le sommaire des fichiers résultats d'ABRicate et supprime les fichiers vide
-
-# 	summaries = []
-
-# 	for abricate_file in abricate_files :
-# 		summary = dir_summaries + "ABRicate_summary_" + abricate_file + ".tsv" # nom du fichier summary 
-# 		os.system("abricate --summary " + abricate_files[abricate_file] + " > " + summary)
-# 		summaries.append(summary)
-
-
-# 		df_summary = pd.read_csv(summary, sep='\t', index_col=0, dtype = str)
-
-# 		files_name = [abricate_file]*len(df_summary.index)
-# 		df_summary.index = files_name
-# 		df_summary.index.name = "#FILE"
-
-# 		df_summary.to_csv(summary, sep='\t')
-
-
-# 	return summaries
-
 
 def get_abricate_files_list(res_dir, abricate_files, output_file) :
 # Fonction qui crée un fichier contenant les chemin des fichiers résultats et les IDs des souches
@@ -116,6 +119,15 @@ def get_abricate_files_list(res_dir, abricate_files, output_file) :
 		abricate_list.write(abricate_files[abricate_file] + '\t' + abricate_file + '\n') # écriture du fichier ligne par ligne
 
 	abricate_list.close() # cloture du fichier
+
+def uninstall_private_db(db_name, abricate_dbs_repertory) :
+
+	if abricate_dbs_repertory[-1] != '/' :
+		abricate_dbs_repertory += '/'
+	
+	os.system("rm -R " + abricate_dbs_repertory + db_name)
+
+	os.system("abricate --setupdb")
 
 	
 def main():
@@ -132,32 +144,43 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
+	print(Arguments)
+
+	if Arguments.private_database is not None and (Arguments.private_db_path is None or Arguments.private_db_fasta is None) :
+		 parser.error("--privatedb argument requires -dbp and -dbf.")
+
+	print(Arguments.default_database is not None)
+
+	if Arguments.default_database is not None and (Arguments.private_db_path is not None or Arguments.private_db_fasta is not None) :
+		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
+
 	t1 = time.time()
 
 	WORKDIR = Arguments.workdir
-	DIRRES = Arguments.dirres
+	RESDIR = Arguments.resdir
 	if WORKDIR[-1] != '/' :
 		WORKDIR += '/'
 
-	if DIRRES[-1] != '/' : 
-		DIRRES += '/'
+	if RESDIR[-1] != '/' : 
+		RESDIR += '/'
 
 
-	if not os.path.exists(WORKDIR + DIRRES) :
-		os.system('mkdir ' + WORKDIR + DIRRES) 
-		os.system('mkdir ' + WORKDIR + DIRRES + 'analysis/')
+	if not os.path.exists(WORKDIR + RESDIR) :
+		os.system('mkdir ' + WORKDIR + RESDIR) 
+		os.system('mkdir ' + WORKDIR + RESDIR + 'analysis/')
 
-	DIR = WORKDIR + DIRRES
-	DIR_ANALYSIS = WORKDIR + DIRRES + "analysis/" # chemin du répertoirequi contiendra les fichier résultats
+	DIR = WORKDIR + RESDIR
+	DIR_ANALYSIS = WORKDIR + RESDIR + "analysis/" # chemin du répertoirequi contiendra les fichier résultats
 	
 	fasta_files = get_fasta_paths(Arguments.input) # récupère la liste des fichers fasta
 
-	abricate_files = run_ABRicate(fasta_files, Arguments.db_name, Arguments.mincov, Arguments.minid, DIR_ANALYSIS, Arguments.nb_tread) # lance Abricate pour toutes les souches
-	#summaries = get_summaries(abricate_files, DIR_SUMMARIES) # Réalise les summary 
-	
-	get_abricate_files_list(DIR, abricate_files, Arguments.output_file) # créer un fichier avec les liste des fichiers résultats de l'analyse ABricate et les IDs des souches 
-	
+	setup_private_db(Arguments.private_database, Arguments.private_db_path, Arguments.private_db_fasta)
 
+	#abricate_files = run_ABRicate(fasta_files, Arguments.default_database, Arguments.mincov, Arguments.minid, DIR_ANALYSIS, Arguments.nb_tread) # lance Abricate pour toutes les souches
+	
+	#get_abricate_files_list(DIR, abricate_files, Arguments.output_file) # créer un fichier avec les liste des fichiers résultats de l'analyse ABricate et les IDs des souches 
+	
+	uninstall_private_db(Arguments.private_database, Arguments.private_db_path)
 
 	t2 = time.time()
 
