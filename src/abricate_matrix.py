@@ -113,7 +113,7 @@ def get_matrix_with_genes(abricate_files, research_type) :
 				product_infos = df_abricate['PRODUCT']
 				
 				for info in product_infos :
-					VF_name = '|' + info.split('[')[1].split(' (')[0]
+					VF_name = '|' + ' ('.join(info.split('[')[1].split(' (')[0:-1])
 					VF_names.append(VF_name)
 
 			
