@@ -79,7 +79,7 @@ def getGenomesObjects(inputFile, dicoGenomes) :
 	for line in lines :
 
 		line = line.rstrip() # retire les retours chariot
-		infos = line.split("\t") # split chaque ligne selon les tabulations 
+		infos = line.split("\t") # split chaque ligne selon les tabulations
 
 		ID = infos[1]
 		fastaFile = infos[0]
@@ -167,8 +167,6 @@ def main():
 	if Arguments.private_database is not None and (Arguments.private_db_path is None or Arguments.private_db_fasta is None) :
 		 parser.error("--privatedb argument requires -dbp and -dbf.")
 
-	print(Arguments.default_database is not None)
-
 	if Arguments.default_database is not None and (Arguments.private_db_path is not None or Arguments.private_db_fasta is not None) :
 		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
 
@@ -202,8 +200,10 @@ def main():
 	else :
 		DATABASE_NAME = Arguments.default_database
 
+	beginAbricate = time.time()
 	run_ABRicate(dicoGenomes, DATABASE_NAME, Arguments.mincov, Arguments.minid, DIR_ANALYSIS, Arguments.nb_tread) # lance Abricate pour toutes les souches
-	
+	endAbricate = time.time()
+
 	get_abricate_files_list(DIR, dicoGenomes, Arguments.output_file) # créer un fichier avec les liste des fichiers résultats de l'analyse ABricate et les IDs des souches 
 	
 	if Arguments.private_database is not None :
@@ -211,6 +211,11 @@ def main():
 		uninstall_private_db(Arguments.private_database, Arguments.private_db_path)
 
 	t2 = time.time()
+
+	print(len(dicoGenomes))
+
+	abricateTime = endAbricate - beginAbricate
+	print("Temps d'exécution par souche : " + str(round(abricateTime/len(dicoGenomes),3)))
 
 	diff = round(t2 - t1,3)
 	print ("Temps : " + str(diff) + " secondes")
