@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def get_parser() :
-	# Fonction permettant de pourvoir demander des arguments
+	# Fonction permettant de pourvoir  demander des arguments
 
 	parser = argparse.ArgumentParser(description= \
 		'Find ARM, virulence and toxin genes running ABRicate', \
