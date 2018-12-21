@@ -209,7 +209,7 @@ def getVfFamiliesDico(familiesFile) :
 
 
 
-def getMatrixAllGenes(dicoGenomes) :
+def getMatrixAllGenes(dicoGenomes, dicoGenes, database) :
 	dataframes = []
 
 	for genome in dicoGenomes :
@@ -221,7 +221,51 @@ def getMatrixAllGenes(dicoGenomes) :
 	# remplace les valeurs NaN par des 0
 	matrixAllGenes.fillna(0, inplace=True)
 
+	if database == "resfinder" or database == "vfdb" :
+		matrixAllGenes = sortGenesByTypes(matrixAllGenes, dicoGenes, database)
+
 	return matrixAllGenes
+
+
+
+def sortGenesByTypes(matrixAllGenes, dicoGenes, database) :
+	genesList = matrixAllGenes.columns
+	newGenesList = []
+	
+	if database == "resfinder" :
+		antibioticFamilies = []
+
+		for geneName in genesList : 
+			antibioticFamily = dicoGenes[geneName].antibioticFamily + "|"
+			antibioticFamilies.append(antibioticFamily)
+
+		genesAndFamilies = antibioticFamilies + genesList
+
+
+	elif database == "vfdb" : 
+		vfFamilies = []
+
+		for geneName in genesList : 
+			vfFamily = dicoGenes[geneName].vfFamily + "|" + dicoGenes[geneName].vfName + "|"
+			vfFamilies.append(vfFamily)
+
+		genesAndFamilies = vfFamilies + genesList
+
+
+	matrixAllGenes.columns = genesAndFamilies
+
+	matrixAllGenes = matrixAllGenes.sort_index(axis = 1)
+
+	genesAndFamilies = matrixAllGenes.columns
+
+	for genesAndFamily in genesAndFamilies :
+		geneName = genesAndFamily.split("|")[-1]
+		newGenesList.append(geneName)
+
+	matrixAllGenes.columns = newGenesList
+
+	return matrixAllGenes
+
 
 
 
@@ -355,11 +399,11 @@ def getCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	
 	genesList = matrixAllGenes.columns
 
-	for gene in genesList : # pour chaque colonne de la matrice
+	for geneName in genesList : # pour chaque colonne de la matrice
 
-		if not gene in genes : # si le gène n'est pas dans la liste
-			genes.append(gene) # ajout du gène à la liste
-			number.append(sum(matrixAllGenes[gene])) # exemplaire du gène dans tous les génomes
+		if not geneName in genes : # si le gène n'est pas dans la liste
+			genes.append(geneName) # ajout du gène à la liste
+			number.append(sum(matrixAllGenes[geneName])) # exemplaire du gène dans tous les génomes
 
 	corTable['genes'] = genes # remplissage de la colonne gene
 	corTable['number'] = number # remplissage de la colonne effectif
@@ -376,12 +420,12 @@ def removeGenesPresentInAllGenomes(matrixAllGenes) :
 
 	removedGenes = [] # liste des gènes supprimés
 
-	for gene in genesList : # pour chaque gène
-		print(gene)
-		print(all(MATRIX[gene] == 1)) 
-		if all(matrixAllGenes[gene] == 1) : # Si toutes les valuers de la colonne du gène sout égales à 1
-			matrixAllGenes.pop(gene) # suppression du gène
-			removedGenes.append(gene) # ajout du gène à la liste des gènes supprimés
+	for geneName in genesList : # pour chaque gène
+		print(geneName)
+		print(all(matrixAllGenes[geneName] == 1)) 
+		if all(matrixAllGenes[geneName] == 1) : # Si toutes les valuers de la colonne du gène sout égales à 1
+			matrixAllGenes.pop(geneName) # suppression du gène
+			removedGenes.append(geneName) # ajout du gène à la liste des gènes supprimés
 
 	print(removedGenes)
 
@@ -395,7 +439,7 @@ def heatmap(matrix, heatmapName, dirHeatmap) :
 	
 	try : # si pas de RecursionError
 
-		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(18, 14), linewidths=.003) # réalisation de la heatmap
+		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(18, 14), linewidths=.003, col_cluster = False)  # réalisation de la heatmap
 		heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
 	except RecursionError: # sinon
@@ -450,7 +494,7 @@ def main():
 	if Arguments.defaultDatabase is not None :
 		if Arguments.defaultDatabase == 'resfinder' : 
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None)
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes)
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
 			matrixByGenesTypes = getResfinderMatrixByGenesTypes(matrixAllGenes, dicoGenes)
 			corTable = getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes)
 
@@ -459,10 +503,10 @@ def main():
 			heatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP) # réalise la heatmap des antibio
 
 		elif Arguments.defaultDatabase == 'vfdb' : 
-			dicoVfFamilies = getVfFamiliesDico('VFs.csv')
+			dicoVfFamilies = getVfFamiliesDico('VFs.tsv')
 			print(dicoVfFamilies)
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies)
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes)
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
 			matrixByGenesTypes = getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes)
 			corTable = getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes)
 
@@ -472,7 +516,7 @@ def main():
 
 		else : 
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None)
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes)
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
 			corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes)
 
 		if Arguments.remove : 
@@ -481,13 +525,15 @@ def main():
 
 	elif Arguments.privateDatabase : 
 		getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None)
-		matrixAllGenes = getMatrixAllGenes(dicoGenomes)
+		matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
 		corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes)
 
 	writeMatrix(matrixAllGenes, "matrixAllGenes.tsv", DIR_MATRIX, True) # ecrit la matrice des gènes
 	writeMatrix(corTable, "correspondance_table.tsv", DIR_MATRIX, False) # ecrit la table de correspondance
 
 	heatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP) # réalise la heatmap des gène
+
+	print(matrixAllGenes)
 
 	#os.system("rm " + Arguments.abricateList)
 		
