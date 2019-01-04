@@ -18,13 +18,13 @@ As well as default databases ([Resfinder](https://cge.cbs.dtu.dk/services/ResFin
 The tool is divided into two scripts.
 
 
-## ABRicate analysis
+### ABRicate analysis
 
 This script aims to run ABricate. It takes in input a tsv file containing genomes fasta files paths and IDs.If you want to use your own database you also need to provide a multifasta whith genes IDs as headers. Then the script run ABricate and produce in output one ABRicate result file per genome, corresponding to a tsv file including genes found in each sample.
 
-## Results production
+### Results production
 
-The second script aims to conditionning ABRicate results in the form of matrixes and heatmaps of presence/absence. It takes in input a temporary file produced by the Abricate analysis containing the genomes Abricate results paths and IDs. In the case of vfdb databas a file containing the virulence factors names, their family and species is automticaly included in the script.
+The second script aims to conditionning ABRicate results in the form of matrixes and heatmaps of presence/absence. It takes in input a temporary file produced by the Abricate analysis containing the genomes Abricate results paths and IDs. In the case of vfdb database a file containing the virulence factors names, their family and species is automticaly included in the script.
 
 The output depending on the database used :
 
@@ -45,7 +45,7 @@ Dependencies
 
 The script has been developed with python 3.6 (tested with 3.6.6)
 
-## External dependencies
+### External dependencies
 
 * [ABRicate](https://github.com/tseemann/abricate) tested with 0.8.7
 * [Pandas](https://pandas.pydata.org/) tested with 0.23.4
