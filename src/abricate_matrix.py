@@ -31,7 +31,7 @@ def get_parser() :
 
 	db_type.add_argument('--defaultdb', action="store", dest='defaultDatabase', \
 						type=str, choices=['resfinder', 'card',	'argannot', 'ecoh', \
-							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi'], help='default \
+							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'vir_clost', 'enterotox_staph'], help='default \
 								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)')
 
 	db_type.add_argument('--privatedb', action="store_true", dest='privateDatabase', \
@@ -438,8 +438,8 @@ def heatmap(matrix, heatmapName, dirHeatmap) :
 	# sns.clustermap(df, metric="correlation", method="single", cmap="Blues", standard_scale=1, row_colors=row_colors)
 	
 	try : # si pas de RecursionError
-
-		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(18, 14), linewidths=.003, col_cluster = False)  # réalisation de la heatmap
+		#sns.set(rc = {"ytick.labelsize":5})
+		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(16, 40), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # réalisation de la heatmap
 		heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
 	except RecursionError: # sinon
@@ -535,7 +535,7 @@ def main():
 
 	print(matrixAllGenes)
 
-	#os.system("rm " + Arguments.abricateList)
+	os.system("rm " + Arguments.abricateList)
 		
 
 	t2 = time.time()
