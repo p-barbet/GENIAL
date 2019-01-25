@@ -55,23 +55,22 @@ The script has been developed with python 3.6 (tested with 3.6.6)
 Parameters
 ==========
 
-### Parameters
-
-* -f : tsv file with FASTA files paths and strains IDs (REQUIRED)
-* -dbp : path to abricate databases repertory. Implies -dbf and --privatedb
-* -dbf : Multifasta containing the private database sequences. Implies -dbp and --privatedb
-* -T : number of theard to use (default:1)
-* -w : working directory (default:.)
-* -r : results directory name (default:ABRicate_results)
+### Command line options
 
 
-### Options
-
-* --defaultdb : resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb or ncbi. Incompatible with --privatedb
-* --privatedb : Private database name. Implies -dbp and -dbf. Incompatible with --defaultdb
-* --mincov : Minimum proportion of gene covered (default:80)
-* --minid : Minimum proportion of exact nucleotide matches (default:90)
-* --R : Remove genes present in all genomes from the matrix (default:False)
+|   Options   |                                                              Description                                                              |        Required        |      Default     |
+|:-----------:|:-------------------------------------------------------------------------------------------------------------------------------------:|:----------------------:|:----------------:|
+|      -f     |                                            tsv file with FASTA files paths ans strains IDs                                            |           Yes          |                  |
+|     -dbp    |                                   Path to ABRicate databases repertory. Implies -dbf and --privatedb                                  |   Yes if --privatedb   |                  |
+|     -dbf    |                           Multifasta containing the private database sequences. Implies -dbp and --privatedb                          |   Yes if --privatedb   |                  |
+|      -T     |                                                        Number of thread to use                                                        |           No           |         1        |
+|      -w     |                                                           Working directory                                                           |           No           |         .        |
+|      -r     |                                                         Results directory name                                                        |           No           | ABRicate_results |
+| --defaultdb |  default databases available : resfinder, card, argannot, acoh, ecoli_vf, plasmidfinder, vfdb or ncbi. Incompatible with --privatedb  | Yes if not --privatedb |                  |
+| --privatedb |                              Private database name. Implies -dbp and -dbf. Incompatible with --defaultdb                              | Yes if not --defaultdb |                  |
+|   --mincov  |                                                   Minimum proportion of gene covered                                                  |           No           |        80        |
+|   --minid   |                                             Minimum proportion of exact nucleotide matches                                            |           No           |        90        |
+|     --R     |                                          Remove genes present in all genomes from the matrix                                          |           No           |       False      |
 
 Test 
 ====
