@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def get_parser() :
-	# Fonction permettant de pourvoir  demander des arguments
+	# Fonction permettant de pourvoir demander des arguments
 
 	parser = argparse.ArgumentParser(description= \
 		'Find ARM, virulence and toxin genes running ABRicate', \
@@ -19,7 +19,7 @@ def get_parser() :
 
 	db_type.add_argument('--defaultdb', action="store", dest='default_database', \
 						type=str, choices=['resfinder', 'card',	'argannot', 'ecoh', \
-							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi'], help='default \
+							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'enterotox_staph'], help='default \
 								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)')
 
 	db_type.add_argument('--privatedb', action="store", dest='private_database', \
@@ -93,17 +93,22 @@ def getGenomesObjects(inputFile, dicoGenomes) :
 
 def setup_private_db(db_name, abricate_dbs_repertory, db_multifasta) :
 
+	multifastaName = db_multifasta.split("/")[-1]
+
 	if abricate_dbs_repertory[-1] != '/' :
 		abricate_dbs_repertory += '/'
 
 	if not os.path.exists(abricate_dbs_repertory + db_name) :
 		os.system("mkdir " + abricate_dbs_repertory + db_name)
 	else : 
-		sys.exit("La base de donnée " + db_name + " existe déjà")
+		sys.exit("ERREUR: La base de donnée " + db_name + " existe déjà")
 
 	os.system("cp " + db_multifasta + " " + abricate_dbs_repertory + db_name)
 
+	os.system("mv " + abricate_dbs_repertory + db_name + "/" + multifastaName + " " + abricate_dbs_repertory + db_name + "/" +"sequences")
+
 	os.system("abricate --setupdb")
+
 
 
 def run_ABRicate(dicoGenomes, db_name, mincov, minid, dir_analysis, nb_threads) :
@@ -162,8 +167,6 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
-	print(Arguments)
-
 	if Arguments.private_database is not None and (Arguments.private_db_path is None or Arguments.private_db_fasta is None) :
 		 parser.error("--privatedb argument requires -dbp and -dbf.")
 
@@ -211,8 +214,6 @@ def main():
 		uninstall_private_db(Arguments.private_database, Arguments.private_db_path)
 
 	t2 = time.time()
-
-	print(len(dicoGenomes))
 
 	abricateTime = endAbricate - beginAbricate
 	print("Temps d'exécution par souche : " + str(round(abricateTime/len(dicoGenomes),3)))
