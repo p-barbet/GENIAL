@@ -37,7 +37,7 @@ On top of that:
 
 * If you don't use one of the two previous databases or if you use your own database, only a corespondance table between the gene name and its number in all genomes is produced in addition.
 
-![](workflow.JPG?raw=true "script workflow")
+![](Workflow.JPG?raw=true "script workflow")
 
 
 Dependencies
