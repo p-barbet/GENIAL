@@ -31,7 +31,7 @@ def get_parser() :
 
 	db_type.add_argument('--defaultdb', action="store", dest='defaultDatabase', \
 						type=str, choices=['resfinder', 'card',	'argannot', 'ecoh', \
-							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'vir_clost', 'enterotox_staph'], help='default \
+							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'vir_clost', 'enterotox_staph', 'phages'], help='default \
 								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)')
 
 	db_type.add_argument('--privatedb', action="store_true", dest='privateDatabase', \
@@ -45,13 +45,15 @@ def get_parser() :
 
 	return parser
 
+
+# objet génome (atributs : ID, fichier abricate, gènes, matrice abricate, matrice des gènes)
 class genome(object) :
 
 	def __init__(self) :
 		self.ID = ""
 		self.abricateFile = ""
-		self.genes = [] #liste des gènes 
-		self.abricateMatrix = None # dataframe contenant les informations du fichier
+		self.genes = [] 
+		self.abricateMatrix = None # informations du fichier abricate
 		self.genesMatrix = None
 
 
@@ -68,43 +70,45 @@ class genome(object) :
 
 		genesList = self.abricateMatrix['GENE']
 
-		if len(genesList) != 0 : # si au moins à gène de résiatnce à été trouvé
+		if len(genesList) != 0 : # si au moins 1 gène de résistance trouvé
 		
 			for geneName in genesList :
 				self.genes.append(geneName) # ajout de chaque gène à la liste gène
 
 	def setGenesMatrix(self) :
-		if len(self.genes) != 0 : # si au moins à gène de résiatnce à été trouvé
+		if len(self.genes) != 0 : # si au moins 1 gène de résistance trouvé
 		
 			for geneName in self.genes :
-				self.genesMatrix = pd.DataFrame(1, index = [self.ID], columns = self.genes) # crée un dataframe d'une ligne remplis de 1 avec les gènes de la souche en colonnes et le nom de la souche en index
-				self.genesMatrix = self.genesMatrix.groupby(self.genesMatrix.columns, axis=1).sum()# si un gène à été trouvé pusieurs fois dans le génome fait la somme des colonnes avec le même nom de gene
+				self.genesMatrix = pd.DataFrame(1, index = [self.ID], columns = self.genes) # création d'un dataframe remplis de 1 avec les gènes du génome en colonnes et le nom du génome en index
+				self.genesMatrix = self.genesMatrix.groupby(self.genesMatrix.columns, axis=1).sum() # Somme des colonnes avec le même nom de gene (prise en compte de gène trouvés plusieurs fois dans le génome)
 
 		else :
 
-			self.genesMatrix = pd.DataFrame(index = [self.ID]) # sinon création d'un dataframe vide avec comme index l'ID
+			self.genesMatrix = pd.DataFrame(index = [self.ID]) # sinon création d'un dataframe vide avec l'ID du génome en index
 
 
 	def getGenesObjects(self, dicoGenes, database, dicoVfFamilies) :
 		for geneName in self.genes :
-			if geneName not in dicoGenes :
+			if geneName not in dicoGenes : # si le nom du gène n'est pas dans le dictionnaire des gènes création de l'objet gène correspondant
 				dicoGenes[geneName] = gene()
 
-				productInfos = self.abricateMatrix.set_index('GENE')['PRODUCT'][geneName]
+				
 
 				dicoGenes[geneName].setName(geneName)
 				dicoGenes[geneName].setDatabase(database)
 
 				if database == 'vfdb' : 
-					dicoGenes[geneName].setVfName(productInfos)
-					dicoGenes[geneName].setSpecies(productInfos)
-					dicoGenes[geneName].setVfFamily(dicoVfFamilies)
+					productInfos = self.abricateMatrix.set_index('GENE')['PRODUCT'][geneName] # récupération des informations dans la colonne produit du gène
+					dicoGenes[geneName].setVfName(productInfos) # nom du facteur de virulence
+					dicoGenes[geneName].setSpecies(productInfos) # espèce du facteur de virulence
+					dicoGenes[geneName].setVfFamily(dicoVfFamilies) # famille du facteur de virulence
 
 				elif database == 'resfinder' :
-					dicoGenes[geneName].setAntibioticFamily(productInfos)
+					dicoGenes[geneName].setAntibioticFamily(productInfos) # famille d'antibiotiques
 
 	
 
+# objet gène (atributs : nom, base de données, nom VF, nom famille VF, espèce, famille d'antibiotiques)
 class gene(object) :
 
 	def __init__(self) :
@@ -137,8 +141,8 @@ class gene(object) :
 		self.species = species
 
 	def setVfFamily(self, dicoVfFamilies) :
-		if (self.species in dicoVfFamilies) and (self.vfName in dicoVfFamilies[self.species]) :
-			self.vfFamily = dicoVfFamilies[self.species][self.vfName]
+		if (self.species in dicoVfFamilies) and (self.vfName in dicoVfFamilies[self.species]) : # si l'espèce et facteur de vurlence sont dans le dictionnaire des facteurs de virulence
+			self.vfFamily = dicoVfFamilies[self.species][self.vfName] # attribution de la famille du facteur de virulence
 
 		else : 
 			self.vfFamily = 'Unclassified'
@@ -148,7 +152,7 @@ class gene(object) :
 
 
 
-
+# Fonction qui crée tous les objets génomes et gènes et les stock dans des dictionnaires avec les IDs de ces derniers comme clés
 def getGenomesObjects(inputFile, dicoGenomes, database, dicoGenes, dicoVfFamilies) :
 	
 	data = open(inputFile, 'r')
@@ -157,15 +161,15 @@ def getGenomesObjects(inputFile, dicoGenomes, database, dicoGenes, dicoVfFamilie
 
 	for line in lines :
 
-		line = line.rstrip() # retire les retours chariot
-		infos = line.split("\t") # split chaque ligne selon les tabulations 
+		line = line.rstrip() # suppression des retours chariots des lignes
+		infos = line.split("\t") 
 
-		ID = infos[1]
-		abricateFile = infos[0]
+		ID = infos[1] # IDs des génomes
+		abricateFile = infos[0] # chemins des résultats abricate
 
-		dicoGenomes[ID] = genome()
+		dicoGenomes[ID] = genome() 
 
-		dicoGenomes[ID].setID(ID)
+		dicoGenomes[ID].setID(ID) 
 		dicoGenomes[ID].setAbricateFile(abricateFile)
 		dicoGenomes[ID].setAbricateMatrix()
 		dicoGenomes[ID].setGenes()
@@ -175,184 +179,194 @@ def getGenomesObjects(inputFile, dicoGenomes, database, dicoGenes, dicoVfFamilie
 		dicoGenomes[ID].getGenesObjects(dicoGenes, database, dicoVfFamilies)
 
 
+# Fonction qui stock dans un dictionnaire les familles des facteurs de virulence associées à chaque espèces
+def getVfFamiliesDico(vfFamiliesFile) :
 
-def getVfFamiliesDico(familiesFile) :
-
-	data = open(familiesFile, 'r')
+	data = open(vfFamiliesFile, 'r')
 	lines  = data.readlines()
 	data.close()
 
-	dicoVfFamilies = {}
+	dicoVfFamilies = {} # dictionnaire des familles de facteur de virulence
 
 	for line in lines :
 
-		line = line.rstrip()
+		line = line.rstrip() # suppresion des retours chariot
 		infos = line.split('\t')
 
-		vfName = infos[0]
-		species = infos[1]
+		vfName = infos[0] # nom du facteur de virulence
+		species = infos[1] # nom de l'espèce
 
 		try :
-			vfFamily = infos[2].split('; ')[0]
+			vfFamily = infos[2].split('; ')[0] # famille du facteur de virulence
 
 		except IndexError:
 			vfFamily = 'Unclassified'
 
-		if species in dicoVfFamilies :
-			dicoVfFamilies[species][vfName] = vfFamily
+		if species in dicoVfFamilies : # si l'espèce est dans le dictionnaire
+			dicoVfFamilies[species][vfName] = vfFamily # association de la famille au facteur de virulence
 
 		else :
-			dicoVfFamilies[species] = {}
-			dicoVfFamilies[species][vfName] = vfFamily
+			dicoVfFamilies[species] = {} # sinon création de l'espèce
+			dicoVfFamilies[species][vfName] = vfFamily # association de la famille au facteur de virulence
 
 	return dicoVfFamilies
 
 
 
+# Fonction qu réalise la matrice de présence abscence de tous les gènes pour chaque génome
 def getMatrixAllGenes(dicoGenomes, dicoGenes, database) :
-	dataframes = []
 
+	dataframes = [] # liste des dataframes des génomes
+
+	# construction de la liste des dataframes de tous les génomes
 	for genome in dicoGenomes :
-		dataframes.append(dicoGenomes[genome].genesMatrix)
+		dataframes.append(dicoGenomes[genome].genesMatrix) 
 
-	# merge des dataframes
-	matrixAllGenes = pd.concat(dataframes, sort=True)
+	matrixAllGenes = pd.concat(dataframes, sort=True) # concaténation des dataframes de la liste
 
-	# remplace les valeurs NaN par des 0
-	matrixAllGenes.fillna(0, inplace=True)
+	matrixAllGenes.fillna(0, inplace=True) # remplacement des NaN par des 0
 
 	if database == "resfinder" or database == "vfdb" :
-		matrixAllGenes = sortGenesByTypes(matrixAllGenes, dicoGenes, database)
+		matrixAllGenes = sortGenesByTypes(matrixAllGenes, dicoGenes, database) # tri des gènes par type si la base de donnée est resfinder ou vfdb
 
 	return matrixAllGenes
 
 
-
+# Fonction qui tri les gènes d'une matrice par type
 def sortGenesByTypes(matrixAllGenes, dicoGenes, database) :
-	genesList = matrixAllGenes.columns
-	newGenesList = []
+
+	genesList = matrixAllGenes.columns # liste des gènes
+	newGenesList = [] # nouvelle liste des gènes réordonés
 	
+
+	# base de données resfinder
 	if database == "resfinder" :
-		antibioticFamilies = []
+		antibioticFamilies = [] # liste des familles d'antibiotiques
 
 		for geneName in genesList : 
-			antibioticFamily = dicoGenes[geneName].antibioticFamily + "|"
-			antibioticFamilies.append(antibioticFamily)
+			antibioticFamily = dicoGenes[geneName].antibioticFamily + "|" # famille d'antibiotique
+			antibioticFamilies.append(antibioticFamily) # construction de la liste des familles d'antibiotiques
 
-		genesAndFamilies = antibioticFamilies + genesList
+		genesAndFamilies = antibioticFamilies + genesList # association de chaque gènes à sa famille d'antibiotique
 
 
+	# base de données vfdb
 	elif database == "vfdb" : 
-		vfFamilies = []
+		vfFamilies = [] # liste des familles des facteurs de virulence
 
 		for geneName in genesList : 
-			vfFamily = dicoGenes[geneName].vfFamily + "|" + dicoGenes[geneName].vfName + "|"
-			vfFamilies.append(vfFamily)
+			vfFamily = dicoGenes[geneName].vfFamily + "|" + dicoGenes[geneName].vfName + "|" # famille et nom du facteur de virulence
+			vfFamilies.append(vfFamily) # construction de la liste des familles des facteurs de virulence
 
-		genesAndFamilies = vfFamilies + genesList
+		genesAndFamilies = vfFamilies + genesList # association de chaque gène à sa famille de facteur de virulence
 
 
-	matrixAllGenes.columns = genesAndFamilies
+	matrixAllGenes.columns = genesAndFamilies # renomage des gènes par ces derniers associés à leur famille
 
-	matrixAllGenes = matrixAllGenes.sort_index(axis = 1)
+	matrixAllGenes = matrixAllGenes.sort_index(axis = 1) # tri des gènes par ordre alphabétique
 
-	genesAndFamilies = matrixAllGenes.columns
+	genesAndFamilies = matrixAllGenes.columns # gènes de la matrice
 
 	for genesAndFamily in genesAndFamilies :
-		geneName = genesAndFamily.split("|")[-1]
-		newGenesList.append(geneName)
+		geneName = genesAndFamily.split("|")[-1] # gènes sans sa famille
+		newGenesList.append(geneName) # construction de la liste des gènes réordonnés
 
-	matrixAllGenes.columns = newGenesList
+	matrixAllGenes.columns = newGenesList # renomage des gènes réordonés
 
 	return matrixAllGenes
 
 
 
-
+# Fonction qui construit la matrice par type de gènes pour la base de données vfdb
 def getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes) :
-	genomes = matrixAllGenes.index
-	genesList = matrixAllGenes.columns
 
-	vfFamilies = []
+	genomes = matrixAllGenes.index # génomes
+	genesList = matrixAllGenes.columns # gènes
 
-	for geneName in genesList :
-		vfFamily = dicoGenes[geneName].vfFamily
+	vfFamilies = [] # liste des familles des facteurs de virulence
+
+	for geneName in genesList : # pour chaqua gène
+		vfFamily = dicoGenes[geneName].vfFamily # famille du gène
 
 		if vfFamily not in vfFamilies :
-			vfFamilies.append(vfFamily)
+			vfFamilies.append(vfFamily)  # construction de la liste des familles des facteurs de virulence
 
-	matrixByVfFamilies = pd.DataFrame(0, index = genomes, columns = vfFamilies)
+	matrixByVfFamilies = pd.DataFrame(0, index = genomes, columns = vfFamilies) # construction d'une matrice remplie de 0 avec les génomes en index et les familles en colonne
 
-	for genome in genomes :
+	for genome in genomes : # pour chaque génome
 		for geneName in genesList :
-			familyName = dicoGenes[geneName].vfFamily
+			familyName = dicoGenes[geneName].vfFamily  # famille du gène
 
 			if matrixAllGenes[geneName][genome] != 0 : # si le gène est présent dans le génome
-				matrixByVfFamilies[familyName][genome] += matrixAllGenes[geneName][genome]  # incrémente la matrice de sa valeur
+				matrixByVfFamilies[familyName][genome] += matrixAllGenes[geneName][genome]  # incrémentation de la matrice du nombre de fois qu'on le retrouve dans le génome
 
 	return matrixByVfFamilies
 
 
-
+# Fonction qui construit la matrice par type de gènes pour la base de données resfinder
 def getResfinderMatrixByGenesTypes(matrixAllGenes, dicoGenes) :
-	genomes = matrixAllGenes.index
-	genesList = matrixAllGenes.columns
-	antibioticFamilies = []
 
-	for geneName in dicoGenes :
-		antibioticFamily = dicoGenes[geneName].antibioticFamily
+	genomes = matrixAllGenes.index # genomes
+	genesList = matrixAllGenes.columns # gènes
 
-		if antibioticFamily not in antibioticFamilies :
-			antibioticFamilies.append(antibioticFamily)
+	antibioticFamilies = [] # liste des familles d'antibiotiques
 
-	matrixByAntibioticFamilies = pd.DataFrame(0, index = genomes, columns = antibioticFamilies)
+	for geneName in dicoGenes : # pour chaque gène
+		antibioticFamily = dicoGenes[geneName].antibioticFamily # famille d'antibiotique
+
+		if antibioticFamily not in antibioticFamilies : 
+			antibioticFamilies.append(antibioticFamily)# construction de la liste des familles d'antibiotiques
+
+	matrixByAntibioticFamilies = pd.DataFrame(0, index = genomes, columns = antibioticFamilies) # construction d'une matrice remplie de 0 avec les génomes en index et les familles en colonne
 
 	for genome in genomes :
 		for geneName in dicoGenes :
-			familyName = dicoGenes[geneName].antibioticFamily
+			familyName = dicoGenes[geneName].antibioticFamily # femille d'antibiotique
 
 			if matrixAllGenes[geneName][genome] != 0 : # si le gène est présent dans le génome
-				matrixByAntibioticFamilies[familyName][genome] += matrixAllGenes[geneName][genome]  # incrémente la matrice de sa valeur
+				matrixByAntibioticFamilies[familyName][genome] += matrixAllGenes[geneName][genome] # incrémentation de la matrice du nombre de fois qu'on le retrouve dans le génome
 
 	return matrixByAntibioticFamilies
 
 
+
+# Fonction qui écrit une latrice dans un fichier tabulé (tsv)
 def writeMatrix(matrix, matrixName, dirMatrix, index) :
-# Fonction qui écrit la matrice dans un fichier
-	matrix.to_csv(dirMatrix + matrixName, sep='\t', index = index) # écriture de la matrice dans un fichier tsv
+	matrix.to_csv(dirMatrix + matrixName, sep='\t', index = index)
 
 
-
+# Fonction qui construit une table de correspondance en attribuant à chaque gène son son espèces, son VF, sa famile et son effectif pour la base de données vfdb
 def getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) :
-# Fonction qui réalise une table de correspondance en attribuant à chaque gène son type de résistance et le nombre de fois qu'il ets retrouvé tous les génomes confondu
 
-	genes = []
-	vfNames = []
-	vfFamilies = []
-	speciesNames = []
-	number = []
+	genes = [] # gènes
+	vfNames = [] # noms des VF
+	vfFamilies = [] # noms des familles des VF
+	speciesNames = [] # nom des espèces
+	number = [] # effectifs des gènes
 
-	corTable = pd.DataFrame(columns = ['genes', 'species', 'VF names', 'family names', 'number']) # Définition d'un dataframe vide avec 3 colonnes
+	corTable = pd.DataFrame(columns = ['genes', 'species', 'VF names', 'family names', 'number']) # dataframe vide avec 5 colonnes
 
-	genesList = matrixAllGenes.columns
+	genesList = matrixAllGenes.columns # gènes
 
-	for geneName in genesList : # pour chaque colonne de la matrice
-			genes.append(geneName) # ajout du gène à la liste
-			number.append(sum(matrixAllGenes[geneName])) # exemplaire du gène dans tous les génomes
+	for geneName in genesList : # pour chaque gène
+			genes.append(geneName) # ajout du gène à la liste des gènes
 
-			vfName = dicoGenes[geneName].vfName
-			vfNames.append(vfName)
+			nb = sum(matrixAllGenes[geneName]) # effectif du gène
+			number.append(nb) # ajout à la liste
 
-			species = dicoGenes[geneName].species
-			speciesNames.append(species)
+			vfName = dicoGenes[geneName].vfName # nom du VF
+			vfNames.append(vfName) # ajout à la liste
 
-			vfFamily = dicoGenes[geneName].vfFamily
-			vfFamilies.append(vfFamily)
+			species = dicoGenes[geneName].species # nom de l'espèce
+			speciesNames.append(species) # ajout à la liste
+
+			vfFamily = dicoGenes[geneName].vfFamily # nom d ela famille du VF
+			vfFamilies.append(vfFamily) # ajout à la liste
 
 	corTable['genes'] = genes # remplissage de la colonne gene
-	corTable['species'] = speciesNames
+	corTable['species'] = speciesNames # remplissage de la colonne espèce
 	corTable['VF names'] = vfNames # remplissage de la colonne antibiotique
-	corTable['family names'] = vfFamilies
+	corTable['family names'] = vfFamilies # remplissage de la colonne famille du VF
 	corTable['number'] = number # remplissage de la colonne effectif
 
 	print(corTable)
@@ -360,24 +374,27 @@ def getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) :
 
 	return corTable
 
+
+# Fonction qui construit une table de correspondance en attribuant à chaque gène son type et son effectif pour la base de données resfinder
 def getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) :
-# Fonction qui réalise une table de correspondance en attribuant à chaque gène son type de résistance et le nombre de fois qu'il ets retrouvé tous les génomes confondu
 
-	genes = []
-	antibioticFamilies = []
-	number = []
+	genes = [] # gènes
+	antibioticFamilies = [] # familles d'natibiotiques
+	number = [] # effecyifs des gènes
 
-	corTable = pd.DataFrame(columns = ['genes', 'antibiotic resistance', 'number']) # Définition d'un dataframe vide avec 3 colonnes
+	corTable = pd.DataFrame(columns = ['genes', 'antibiotic resistance', 'number']) # dataframe vide avec 3 colonnes
 	genesList = matrixAllGenes.columns
 
-	for gene in genesList : # pour chaque colonne de la matrice
+	for geneName in genesList : # pour chaque gène
 
-		if not gene in genes : # si le gène n'est pas dans la liste
-			genes.append(gene) # ajout du gène à la liste
-			number.append(sum(matrixAllGenes[gene])) # exemplaire du gène dans tous les génomes
+		if not geneName in genes : 
+			genes.append(geneName) # ajout du gène à la liste
 
-			antibioticFamily = dicoGenes[gene].antibioticFamily
-			antibioticFamilies.append(antibioticFamily)
+			nb = sum(matrixAllGenes[geneName]) # effectif du gène
+			number.append(nb) # ajout à la liste
+
+			antibioticFamily = dicoGenes[geneName].antibioticFamily # famille du gène
+			antibioticFamilies.append(antibioticFamily) # ajout à la liste
 
 	corTable['genes'] = genes # remplissage de la colonne gene
 	corTable['antibiotic resistance'] = antibioticFamilies # remplissage de la colonne antibiotique
@@ -389,21 +406,25 @@ def getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	return corTable
 
 
+
+# Fonction qui construit une table de correspondance en attribuant à chaque gène son effectif pour la base de données resfinder
 def getCorrespondanceTable(matrixAllGenes, dicoGenes) :
-# Fonction qui réalise une table de correspondance en attribuant à chaque gène son type de résistance et le nombre de fois qu'il ets retrouvé tous les génomes confondu
 
-	genes = []
-	number = []
+	genes = [] # genes
+	number = [] # effectifs des gènes
 
-	corTable = pd.DataFrame(columns = ['genes', 'number']) # Définition d'un dataframe vide avec 3 colonnes
+	corTable = pd.DataFrame(columns = ['genes', 'number']) # dataframe vide avec 2 colonnes
 	
-	genesList = matrixAllGenes.columns
+	genesList = matrixAllGenes.columns # liste des gènes
 
-	for geneName in genesList : # pour chaque colonne de la matrice
+	for geneName in genesList : # pour chaque gène
 
-		if not geneName in genes : # si le gène n'est pas dans la liste
+		if not geneName in genes :
 			genes.append(geneName) # ajout du gène à la liste
-			number.append(sum(matrixAllGenes[geneName])) # exemplaire du gène dans tous les génomes
+
+			nb = sum(matrixAllGenes[geneName]) # effectif du gène
+			number.append(nb) # ajout à la liste
+
 
 	corTable['genes'] = genes # remplissage de la colonne gene
 	corTable['number'] = number # remplissage de la colonne effectif
@@ -414,37 +435,32 @@ def getCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	return corTable
 
 
+
+# Fonction qui supprime les gènes présents dans tous les génomes 
 def removeGenesPresentInAllGenomes(matrixAllGenes) :
-# Fonction qui supprime dans la matrice les gènes présent dans tous les génomes et en fait le liste
-	genesList = matrixAllGenes.columns # nom des gènes
+
+	genesList = matrixAllGenes.columns # gènes
 
 	removedGenes = [] # liste des gènes supprimés
 
-	for geneName in genesList : # pour chaque gène
-		print(geneName)
-		print(all(matrixAllGenes[geneName] == 1)) 
-		if all(matrixAllGenes[geneName] == 1) : # Si toutes les valuers de la colonne du gène sout égales à 1
+	for geneName in genesList : # pour chaque gène 
+		if all(matrixAllGenes[geneName] == 1) : # Si toutes les valeurs de la colonne du gène sout égales à 1
 			matrixAllGenes.pop(geneName) # suppression du gène
 			removedGenes.append(geneName) # ajout du gène à la liste des gènes supprimés
-
-	print(removedGenes)
 
 	return matrixAllGenes
 
 
-def heatmap(matrix, heatmapName, dirHeatmap) :
-# fonction qui réalise une heatmap
 
-	# sns.clustermap(df, metric="correlation", method="single", cmap="Blues", standard_scale=1, row_colors=row_colors)
+# Fonction qui construit une heatmap à partir d'une heatmap
+def heatmap(matrix, heatmapName, dirHeatmap, nbGenomes) :
 	
-	try : # si pas de RecursionError
-		#sns.set(rc = {"ytick.labelsize":5})
-		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(16, 40), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # réalisation de la heatmap
+	try : 
+		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(round(0.23*nbGenomes + 0.66), round(0.23*nbGenomes + 0.66)), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # construction de la heatmap
 		heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
-	except RecursionError: # sinon
-
-		print("Erreur lors de la construction de la heatmap, la matrice est trop grande") # affichage d'un massage d'erreur
+	except RecursionError: 
+		print("Erreur lors de la construction de la heatmap, la matrice est trop grande") # affichage d'un message d'erreur si la matrice est trop grande
 
 
 
@@ -493,45 +509,44 @@ def main():
 
 	if Arguments.defaultDatabase is not None :
 		if Arguments.defaultDatabase == 'resfinder' : 
-			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None)
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
-			matrixByGenesTypes = getResfinderMatrixByGenesTypes(matrixAllGenes, dicoGenes)
-			corTable = getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes)
+			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None) # construction des objets génomes
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+			matrixByGenesTypes = getResfinderMatrixByGenesTypes(matrixAllGenes, dicoGenes) # construction de la matrica par type de gène
+			corTable = getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
-			writeMatrix(matrixByGenesTypes, "matrix_by_gene_type.tsv", DIR_MATRIX, True) # ecrit la matrice des antibio
+			writeMatrix(matrixByGenesTypes, "matrix_by_gene_type.tsv", DIR_MATRIX, True) # ecriture de la matrice par type de gènes
 
-			heatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP) # réalise la heatmap des antibio
+			heatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		elif Arguments.defaultDatabase == 'vfdb' : 
-			dicoVfFamilies = getVfFamiliesDico('VFs.tsv')
-			print(dicoVfFamilies)
-			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies)
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
-			matrixByGenesTypes = getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes)
-			corTable = getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes)
+			dicoVfFamilies = getVfFamiliesDico('VFs.tsv') # construction du dictionnaire des familles de VF
+			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies) # construction des objets génomes
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+			matrixByGenesTypes = getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes) # construction de la matrica par type de gène
+			corTable = getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
-			writeMatrix(matrixByGenesTypes, "matrix_by_gene_type.tsv", DIR_MATRIX, True) # ecrit la matrice des antibio
+			writeMatrix(matrixByGenesTypes, "matrix_by_gene_type.tsv", DIR_MATRIX, True) # ecriture de la matrice par type de gènes
 
-			heatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP) # réalise la heatmap des antibio
+			heatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		else : 
-			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None)
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
-			corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes)
+			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None) # construction des objets génomes
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+			corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
 		if Arguments.remove : 
-			matrixAllGenes = removeGenesPresentInAllGenomes(matrixAllGenes)
+			matrixAllGenes = removeGenesPresentInAllGenomes(matrixAllGenes) # retrait des gènes présent dans tous les génomes
 
 
 	elif Arguments.privateDatabase : 
-		getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None)
-		matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase)
-		corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes)
+		getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None) # construction des objets génomes
+		matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+		corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
-	writeMatrix(matrixAllGenes, "matrixAllGenes.tsv", DIR_MATRIX, True) # ecrit la matrice des gènes
-	writeMatrix(corTable, "correspondance_table.tsv", DIR_MATRIX, False) # ecrit la table de correspondance
+	writeMatrix(matrixAllGenes, "matrixAllGenes.tsv", DIR_MATRIX, True) # ecriture de la matrice pour tous les gènes
+	writeMatrix(corTable, "correspondance_table.tsv", DIR_MATRIX, False) # ecriture la table de correspondance
 
-	heatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP) # réalise la heatmap des gène
+	heatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap pour tous les gènes
 
 	print(matrixAllGenes)
 
@@ -546,3 +561,4 @@ def main():
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
 	main()	  
+
