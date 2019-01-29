@@ -17,30 +17,30 @@ def get_parser() :
 
 	db_type = parser.add_mutually_exclusive_group(required=True)
 
-	db_type.add_argument('--defaultdb', action="store", dest='default_database', \
+	db_type.add_argument('--defaultdb', action="store", dest='defaultDatabase', \
 						type=str, choices=['resfinder', 'card',	'argannot', 'ecoh', \
-							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'enterotox_staph'], help='default \
+							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'vir_clost', 'enterotox_staph', 'phages'], help='default \
 								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)')
 
-	db_type.add_argument('--privatedb', action="store", dest='private_database', \
+	db_type.add_argument('--privatedb', action="store", dest='privateDatabase', \
 						type=str, help='private database name. Implies -dbp, -dbf. Incompatible with --defaultdb')
 
-	parser.add_argument('-dbp', action="store", dest='private_db_path', \
+	parser.add_argument('-dbp', action="store", dest='privatedbPath', \
 						type=str, help='path to abricate \
 							databases repertory. Implies -dbf, --privatedb')	
 
-	parser.add_argument('-dbf', action="store", dest='private_db_fasta', \
+	parser.add_argument('-dbf', action="store", dest='privatedbFasta', \
 						type=str, help='Multifasta containing \
 							the private database sequences. Implies -dbp, --privatedb')	
 
-	parser.add_argument('-T', action="store", dest='nb_tread', 
+	parser.add_argument('-T', action="store", dest='nbThreads', 
 					type=str, default=1, help='number of theard to use')
 
 	parser.add_argument('-w', action="store", dest='workdir', 
 		type=str, default='.', help='working directory')
 
 	parser.add_argument('-r', action="store", dest='resdir', 
-					type=str, default='ABRicate_results', help='results directory name')
+					type=str, default='abricateResults', help='results directory name')
 
 	parser.add_argument('--mincov', action="store", dest='mincov', \
 						type=str, default='80', help='Minimum proportion of gene covered')
@@ -48,12 +48,12 @@ def get_parser() :
 	parser.add_argument('--minid', action="store", dest='minid', \
 						type=str, default='90', help='Minimum proportion of exact nucleotide matches')
 
-	parser.add_argument('-o', action="store", dest='output_file', \
+	parser.add_argument('-o', action="store", dest='outputFile', \
 						type=str, default='ABRicate_files.tsv', help='output file name')
 
 	return parser
 
-
+# Objet génome (atributs : ID, fichier fasta, fichier abricate)
 class genome(object) :
 
 	def __init__(self) :
@@ -71,6 +71,7 @@ class genome(object) :
 		self.abricateFile = abricateFile
 
 
+# Fonction qui crée tous les objets génomes et les stock dans un dictionnaire avec les IDs de ces derniers comme clés
 def getGenomesObjects(inputFile, dicoGenomes) :
 	data = open(inputFile, 'r')
 	lines = data.readlines() 
@@ -78,77 +79,78 @@ def getGenomesObjects(inputFile, dicoGenomes) :
 
 	for line in lines :
 
-		line = line.rstrip() # retire les retours chariot
-		infos = line.split("\t") # split chaque ligne selon les tabulations
+		line = line.rstrip() # retire les retours chariot des lignes
+		infos = line.split("\t")
 
-		ID = infos[1]
-		fastaFile = infos[0]
+		ID = infos[1] # ids des génomes
+		fastaFile = infos[0] # chemins des assemblages
 
-		dicoGenomes[ID] = genome()
+		dicoGenomes[ID] = genome() 
 
-		dicoGenomes[ID].setID(ID)
+		dicoGenomes[ID].setID(ID) 
 		dicoGenomes[ID].setFastaFile(fastaFile)
 		
 
+# Fonction qui crée la nouvelle base de donée abricate
+def setupPrivatedb(dbName, abricateDbsRepertory, dbMultifasta) :
 
-def setup_private_db(db_name, abricate_dbs_repertory, db_multifasta) :
+	multifastaName = dbMultifasta.split("/")[-1] # nom du fichier multifasta de la base a créer
 
-	multifastaName = db_multifasta.split("/")[-1]
+	if abricateDbsRepertory[-1] != '/' :
+		abricateDbsRepertory += '/'
 
-	if abricate_dbs_repertory[-1] != '/' :
-		abricate_dbs_repertory += '/'
-
-	if not os.path.exists(abricate_dbs_repertory + db_name) :
-		os.system("mkdir " + abricate_dbs_repertory + db_name)
+	if not os.path.exists(abricateDbsRepertory + dbName) : # création du répertoire de la base dans abricate si il n'existe pas
+		os.system("mkdir " + abricateDbsRepertory + dbName) 
 	else : 
-		sys.exit("ERREUR: La base de donnée " + db_name + " existe déjà")
+		sys.exit("ERREUR: La base de donnée " + dbName + " existe déjà")
 
-	os.system("cp " + db_multifasta + " " + abricate_dbs_repertory + db_name)
+	os.system("cp " + dbMultifasta + " " + abricateDbsRepertory + dbName) # copie du multifasta dans le répartoire abricate
 
-	os.system("mv " + abricate_dbs_repertory + db_name + "/" + multifastaName + " " + abricate_dbs_repertory + db_name + "/" +"sequences")
+	os.system("mv " + abricateDbsRepertory + dbName + "/" + multifastaName + " " + abricateDbsRepertory + dbName + "/" +"sequences") # renommage du multifasta en "sequences"
 
-	os.system("abricate --setupdb")
-
-
-
-def run_ABRicate(dicoGenomes, db_name, mincov, minid, dir_analysis, nb_threads) :
-# Fonction qui lance ABRicate pour chaque souche (par défaut mincov = 80 et minid = 90)
-
-	for genome in dicoGenomes :
-
-		abricate_result = dir_analysis + "ABRicate_" + dicoGenomes[genome].ID + "_" + db_name + ".tsv" # nom du fichier contenant le résultat de l'analyse (fasta_file = ID de la souche)
-		os.system("abricate " + dicoGenomes[genome].fastaFile + " --db " + db_name + " --mincov " + mincov + " --minid " + minid + " --threads " + str(nb_threads) + " > " + abricate_result) # ligne de commade d'ABRicate
-
-		df_result = pd.read_csv(abricate_result, sep='\t', index_col=0, dtype = str) # lecture du fichier résultat avec pandas (dataframe)
-
-		files_name = [dicoGenomes[genome].ID]*len(df_result.index) # liste contenant autant de fois l'ID de la souche qu'il n'y a de gène dansle fichier
-		df_result.index = files_name # renomage du nom du fichier par l'ID de la souche pour tous les gènes
-		df_result.index.name = "#FILE" # nom de l'index
-
-		df_result.to_csv(abricate_result, sep='\t') # Récriture du fichier
-
-		dicoGenomes[genome].setAbricateFile(abricate_result) #remplis le dico avec les IDs en clés et la chemins vers les fichier résultats d'ABRicate en valeurs 
+	os.system("abricate --setupdb") # idexation de la base dans abricate
 
 
-
-def get_abricate_files_list(res_dir, dicoGenomes, output_file) :
-# Fonction qui crée un fichier contenant les chemin des fichiers résultats et les IDs des souches
-
-	abricate_list = open(res_dir + output_file, 'w') # ouverture du fichier en écriture
+# Fonction qui lance ABRicate pour chaque genome (par défaut mincov = 80 et minid = 90)
+def runABRicate(dicoGenomes, dbName, mincov, minid, analysisDirectory, nbThreads) :
 
 	for genome in dicoGenomes :
-		abricate_list.write(dicoGenomes[genome].abricateFile + '\t' + dicoGenomes[genome].ID + '\n') # écriture du fichier ligne par ligne
 
-	abricate_list.close() # cloture du fichier
+		abricateResult = analysisDirectory + "ABRicate_" + dicoGenomes[genome].ID + "_" + dbName + ".tsv" # nom du fichier résultat de l'analyse
+		os.system("abricate " + dicoGenomes[genome].fastaFile + " --db " + dbName + " --mincov " + mincov + " --minid " + minid + " --threads " + str(nbThreads) + " > " + abricateResult) # lancement d'ABRicate
+
+		dfResult = pd.read_csv(abricateResult, sep='\t', index_col=0, dtype = str) # lecture du fichier résultat avec pandas (dataframe)
+
+		rowsNames = [dicoGenomes[genome].ID]*len(dfResult.index) # liste contenant autant de fois l'ID de la souche qu'il n'y a de ligne dans le fichier
+		dfResult.index = rowsNames # renomage de chaque ligne par l'ID du génome
+		dfResult.index.name = "#FILE" # nom de l'index
+
+		dfResult.to_csv(abricateResult, sep='\t') # Récriture du fichier
+
+		dicoGenomes[genome].setAbricateFile(abricateResult)
 
 
+# Fonction qui crée un fichier contenant les chemin des fichiers résultats et les IDs des génomes
+def getABRicateFilesList(resultsDirectory, dicoGenomes, outputFile) :
 
-def uninstall_private_db(db_name, abricate_dbs_repertory) :
 
-	if abricate_dbs_repertory[-1] != '/' :
-		abricate_dbs_repertory += '/'
+	abricateList = open(resultsDirectory + outputFile, 'w') 
+
+	for genome in dicoGenomes :
+		resultFile = dicoGenomes[genome].abricateFile
+		ID = dicoGenomes[genome].ID
+		abricateList.write(resultFile + '\t' + ID + '\n') 
+
+	abricateList.close()
+
+
+# Fonction qu supprime la base de donnée privée
+def uninstall_private_db(dbName, abricateDbsRepertory) :
+
+	if abricateDbsRepertory[-1] != '/' :
+		abricateDbsRepertory += '/'
 	
-	os.system("rm -R " + abricate_dbs_repertory + db_name)
+	os.system("rm -R " + abricateDbsRepertory + dbName)
 
 	os.system("abricate --setupdb")
 
@@ -167,10 +169,10 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
-	if Arguments.private_database is not None and (Arguments.private_db_path is None or Arguments.private_db_fasta is None) :
+	if Arguments.privateDatabase is not None and (Arguments.privatedbPath is None or Arguments.privatedbFasta is None) : # Vérification que les arguments -dbp et-dbf sont bien présents si la base de donées choisie est privée
 		 parser.error("--privatedb argument requires -dbp and -dbf.")
 
-	if Arguments.default_database is not None and (Arguments.private_db_path is not None or Arguments.private_db_fasta is not None) :
+	if Arguments.defaultDatabase is not None and (Arguments.privatedbPath is not None or Arguments.privatedbFasta is not None) : # Vérification que les arguments -dbp et-dbf en cas de base de données par défaut
 		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
 
 	t1 = time.time()
@@ -189,29 +191,36 @@ def main():
 		os.system('mkdir ' + WORKDIR + RESDIR + 'analysis/')
 
 	DIR = WORKDIR + RESDIR
-	DIR_ANALYSIS = WORKDIR + RESDIR + "analysis/" # chemin du répertoirequi contiendra les fichier résultats
+	analysisDirectory = WORKDIR + RESDIR + "analysis/" 
 
 	dicoGenomes = {}
 	
-	getGenomesObjects(Arguments.input, dicoGenomes) # récupère la liste des fichers fasta
+	getGenomesObjects(Arguments.input, dicoGenomes) # Construction des objets génomes
 
-	if Arguments.private_database is not None :
 
-		setup_private_db(Arguments.private_database, Arguments.private_db_path, Arguments.private_db_fasta)
-		DATABASE_NAME = Arguments.private_database
 
-	else :
-		DATABASE_NAME = Arguments.default_database
+	if Arguments.privateDatabase is not None : # si base de données privée
+
+		DATABASE_NAME = Arguments.privateDatabase
+		setupPrivatedb(DATABASE_NAME, Arguments.privatedbPath, Arguments.privatedbFasta) # 
+		
+
+	else : # si base de données par défaut
+		DATABASE_NAME = Arguments.defaultDatabase
+
 
 	beginAbricate = time.time()
-	run_ABRicate(dicoGenomes, DATABASE_NAME, Arguments.mincov, Arguments.minid, DIR_ANALYSIS, Arguments.nb_tread) # lance Abricate pour toutes les souches
+
+	runABRicate(dicoGenomes, DATABASE_NAME, Arguments.mincov, Arguments.minid, analysisDirectory, Arguments.nbThreads) # lance Abricate pour tous les génomes
+
 	endAbricate = time.time()
 
-	get_abricate_files_list(DIR, dicoGenomes, Arguments.output_file) # créer un fichier avec les liste des fichiers résultats de l'analyse ABricate et les IDs des souches 
-	
-	if Arguments.private_database is not None :
+	getABRicateFilesList(DIR, dicoGenomes, Arguments.outputFile) # création du fichier avec les chemins des fichiers résultats et les IDs des génomes 
 
-		uninstall_private_db(Arguments.private_database, Arguments.private_db_path)
+	
+	if Arguments.privateDatabase is not None : # si base de données privée
+
+		uninstall_private_db(Arguments.privateDatabase, Arguments.privatedbPath)
 
 	t2 = time.time()
 
@@ -224,3 +233,4 @@ def main():
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
 	main()	            		           		
+
