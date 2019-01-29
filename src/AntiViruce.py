@@ -16,23 +16,23 @@ def get_parser() :
 
 	db_type = parser.add_mutually_exclusive_group(required=True)
 
-	db_type.add_argument('--defaultdb', action="store", dest='default_database', \
+	db_type.add_argument('--defaultdb', action="store", dest='defaultDatabase', \
 						type=str, choices=['resfinder', 'card',	'argannot', 'ecoh', \
-							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'vir_clost', 'enterotox_staph'], help='default \
+							'ecoli_vf', 'plasmidfinder', 'vfdb', 'ncbi', 'vir_clost', 'enterotox_staph', 'phages'], help='default \
 								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)')
 
-	db_type.add_argument('--privatedb', action="store", dest='private_database', \
+	db_type.add_argument('--privatedb', action="store", dest='privateDatabase', \
 						type=str, help='private database name. Implies -dbp, -dbf. Incompatible with --defaultdb')
 
-	parser.add_argument('-dbp', action="store", dest='private_db_path', \
+	parser.add_argument('-dbp', action="store", dest='privatedbPath', \
 						type=str, help='path to abricate \
 							databases repertory. Implies -dbf, --privatedb')	
 
-	parser.add_argument('-dbf', action="store", dest='private_db_fasta', \
+	parser.add_argument('-dbf', action="store", dest='privatedbFasta', \
 						type=str, help='Multifasta containing \
 							the private database sequences. Implies -dbp, --privatedb')	
 
-	parser.add_argument('-T', action="store", dest='nb_thread', 
+	parser.add_argument('-T', action="store", dest='nbThreads', 
 					type=str, default=1, help='number of theard to use')
 
 	parser.add_argument('-w', action="store", dest='workdir', 
@@ -54,13 +54,6 @@ def get_parser() :
 
 
 
-
-
-
-
-
-	
-
 def main():
 	
 	##################### gets arguments #####################
@@ -75,10 +68,10 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
-	if Arguments.private_database is not None and (Arguments.private_db_path is None or Arguments.private_db_fasta is None) :
+	if Arguments.privateDatabase is not None and (Arguments.privatedbPath is None or Arguments.privatedbFasta is None) :
 		 parser.error("--privatedb argument requires -dbp and -dbf.")
 
-	if Arguments.default_database is not None and (Arguments.private_db_path is not None or Arguments.private_db_fasta is not None) :
+	if Arguments.defaultDatabase is not None and (Arguments.privatedbPath is not None or Arguments.privatedbFasta is not None) :
 		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
 
 
@@ -89,22 +82,22 @@ def main():
 		Arguments.resdir += '/'
 
 
-	if Arguments.default_database is not None :
+	if Arguments.defaultDatabase is not None :
 
-		os.system("python abricate_analysis.py -f " +  Arguments.input + " -T " + Arguments.nb_thread + " --defaultdb " + Arguments.default_database + ' -r ' + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+		os.system("python abricate_analysis.py -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --defaultdb " + Arguments.defaultDatabase + ' -r ' + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
 
 		if os.path.isfile(Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv") :  # Vérifie que le fichier abricate_files.tsv existe
 
 			if Arguments.remove :
-				os.system("python abricate_matrix.py -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.default_database + " --R")
+				os.system("python abricate_matrix.py -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.defaultDatabase + " --R")
 
 			else :
-				os.system("python abricate_matrix.py -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.default_database)
+				os.system("python abricate_matrix.py -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.defaultDatabase)
 
 
-	elif Arguments.private_database is not None :
+	elif Arguments.privateDatabase is not None :
 
-		os.system("python abricate_analysis.py -f " +  Arguments.input + " -T " + Arguments.nb_thread + " --privatedb " + Arguments.private_database + " -dbp " + Arguments.private_db_path + " -dbf " + Arguments.private_db_fasta + ' -r ' + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+		os.system("python abricate_analysis.py -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --privatedb " + Arguments.privateDatabase + " -dbp " + Arguments.privatedbPath + " -dbf " + Arguments.privatedbFasta + ' -r ' + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
 
 		if os.path.isfile(Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv") : 
 
