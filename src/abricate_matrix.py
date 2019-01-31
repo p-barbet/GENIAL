@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
+
 import os, sys, time
 import argparse
 import pandas as pd
@@ -64,7 +65,7 @@ class genome(object) :
 		self.abricateFile = abricateFile
 
 	def setAbricateMatrix(self) :
-		self.abricateMatrix = pd.read_csv(self.abricateFile, sep='\t', index_col=0, dtype = str) # dataframe contenant les informations du fichie
+		self.abricateMatrix = pd.read_csv(self.abricateFile, sep='\t', index_col=0) # dataframe contenant les informations du fichie
 
 	def setGenes(self) :
 
@@ -214,7 +215,7 @@ def getVfFamiliesDico(vfFamiliesFile) :
 
 
 # Fonction qu réalise la matrice de présence abscence de tous les gènes pour chaque génome
-def getMatrixAllGenes(dicoGenomes, dicoGenes, database) :
+def getMatrixAllGenes(dicoGenomes, dicoGenes, database, workdir, resdir) :
 
 	dataframes = [] # liste des dataframes des génomes
 
@@ -224,10 +225,19 @@ def getMatrixAllGenes(dicoGenomes, dicoGenes, database) :
 
 	matrixAllGenes = pd.concat(dataframes, sort=True) # concaténation des dataframes de la liste
 
+	if matrixAllGenes.empty :
+		os.system("rm -R " + workdir + resdir)
+		sys.exit("\nAucun éléments de la base " + database + " n'ont été retrouvé dans les génomes\n")
+
+
 	matrixAllGenes.fillna(0, inplace=True) # remplacement des NaN par des 0
 
 	if database == "resfinder" or database == "vfdb" :
 		matrixAllGenes = sortGenesByTypes(matrixAllGenes, dicoGenes, database) # tri des gènes par type si la base de donnée est resfinder ou vfdb
+
+	matrixAllGenes[matrixAllGenes.columns] = matrixAllGenes[matrixAllGenes.columns].astype(float)
+	matrixAllGenes[matrixAllGenes.columns] = matrixAllGenes[matrixAllGenes.columns].astype(int)
+
 
 	return matrixAllGenes
 
@@ -369,9 +379,6 @@ def getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	corTable['family names'] = vfFamilies # remplissage de la colonne famille du VF
 	corTable['number'] = number # remplissage de la colonne effectif
 
-	print(corTable)
-	print(corTable['number'].sum())
-
 	return corTable
 
 
@@ -400,9 +407,6 @@ def getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	corTable['antibiotic resistance'] = antibioticFamilies # remplissage de la colonne antibiotique
 	corTable['number'] = number # remplissage de la colonne effectif
 
-	print(corTable)
-	print(corTable['number'].sum())
-
 	return corTable
 
 
@@ -428,9 +432,6 @@ def getCorrespondanceTable(matrixAllGenes, dicoGenes) :
 
 	corTable['genes'] = genes # remplissage de la colonne gene
 	corTable['number'] = number # remplissage de la colonne effectif
-
-	print(corTable)
-	print(corTable['number'].sum())
 
 	return corTable
 
@@ -478,7 +479,7 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
-	t1 = time.time()
+	begin = time.time()
 
 	WORKDIR = Arguments.workdir
 	RESDIR = Arguments.resdir
@@ -496,8 +497,10 @@ def main():
 		os.system('mkdir ' + WORKDIR + RESDIR + 'heatmap/')
 
 	else : 
-		os.system('mkdir ' + WORKDIR + RESDIR + 'matrix/')
-		os.system('mkdir ' + WORKDIR + RESDIR + 'heatmap/')
+		if not os.path.exists(WORKDIR + RESDIR + 'matrix/') :
+			os.system('mkdir ' + WORKDIR + RESDIR + 'matrix/')
+		if not os.path.exists(WORKDIR + RESDIR + 'heatmap/') :
+			os.system('mkdir ' + WORKDIR + RESDIR + 'heatmap/')
 
 
 	DIR_MATRIX = WORKDIR + RESDIR + "matrix/" # chemin de destination des matrices
@@ -510,7 +513,7 @@ def main():
 	if Arguments.defaultDatabase is not None :
 		if Arguments.defaultDatabase == 'resfinder' : 
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None) # construction des objets génomes
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 			matrixByGenesTypes = getResfinderMatrixByGenesTypes(matrixAllGenes, dicoGenes) # construction de la matrica par type de gène
 			corTable = getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
@@ -521,7 +524,7 @@ def main():
 		elif Arguments.defaultDatabase == 'vfdb' : 
 			dicoVfFamilies = getVfFamiliesDico('VFs.tsv') # construction du dictionnaire des familles de VF
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies) # construction des objets génomes
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 			matrixByGenesTypes = getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes) # construction de la matrica par type de gène
 			corTable = getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
@@ -531,7 +534,7 @@ def main():
 
 		else : 
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None) # construction des objets génomes
-			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 			corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
 		if Arguments.remove : 
@@ -540,7 +543,7 @@ def main():
 
 	elif Arguments.privateDatabase : 
 		getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, None) # construction des objets génomes
-		matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase) # construction de la matrice avec tous les gènes
+		matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 		corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
 	writeMatrix(matrixAllGenes, "matrixAllGenes.tsv", DIR_MATRIX, True) # ecriture de la matrice pour tous les gènes
@@ -548,15 +551,12 @@ def main():
 
 	heatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap pour tous les gènes
 
-	print(matrixAllGenes)
-
 	os.system("rm " + Arguments.abricateList)
 		
 
-	t2 = time.time()
+	end = time.time()
 
-	diff = round(t2 - t1,3)
-	print ("Temps : " + str(diff) + " secondes")
+	print ("Temps de construction des matrices et heatmap : " + str(round(end - begin,3)) + " secondes")
 
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
