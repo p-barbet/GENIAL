@@ -74,6 +74,8 @@ def main():
 	if Arguments.defaultDatabase is not None and (Arguments.privatedbPath is not None or Arguments.privatedbFasta is not None) :
 		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
 
+	begin = time.time()
+
 
 	if Arguments.workdir[-1] != '/' :
 		Arguments.workdir += '/'
@@ -106,6 +108,10 @@ def main():
 
 			else :
 				os.system("python abricate_matrix.py -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --privatedb")
+
+	end = time.time()
+
+	print ("Temps d'exécution total : " + str(round(end - begin,3)) + " secondes")
 
 
 
