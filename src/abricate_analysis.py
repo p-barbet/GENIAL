@@ -175,7 +175,7 @@ def main():
 	if Arguments.defaultDatabase is not None and (Arguments.privatedbPath is not None or Arguments.privatedbFasta is not None) : # Vérification que les arguments -dbp et-dbf en cas de base de données par défaut
 		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
 
-	t1 = time.time()
+	begin = time.time()
 
 	WORKDIR = Arguments.workdir
 	RESDIR = Arguments.resdir
@@ -222,13 +222,14 @@ def main():
 
 		uninstall_private_db(Arguments.privateDatabase, Arguments.privatedbPath)
 
-	t2 = time.time()
+	end = time.time()
 
 	abricateTime = endAbricate - beginAbricate
-	print("Temps d'exécution par souche : " + str(round(abricateTime/len(dicoGenomes),3)))
 
-	diff = round(t2 - t1,3)
-	print ("Temps : " + str(diff) + " secondes")
+	print("\n")
+	print("Temps d'exécution d'ABRicate par souche : " + str(round(abricateTime/len(dicoGenomes),3)))
+
+	print ("Temps d'exécution de l'analyse ABRicate : " + str(round(end - begin,3)) + " secondes")
 
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
