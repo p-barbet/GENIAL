@@ -1,0 +1,81 @@
+Genes	Species	VF names	Families names	Number	Family names
+cna	Staphylococcus aureus	CNA		1	Adherence
+clfA	Staphylococcus aureus	Clumping factor		2	Adherence
+clfB	Staphylococcus aureus	Clumping factor		1	Adherence
+map	Staphylococcus aureus	Eap/Map		21	Adherence
+ebp	Staphylococcus aureus	EbpS		24	Adherence
+fnbA	Staphylococcus aureus	FnBPs		3	Adherence
+fnbB	Staphylococcus aureus	FnBPs		1	Adherence
+icaA	Staphylococcus aureus	Intercellular adhesion proteins		22	Adherence
+icaB	Staphylococcus aureus	Intercellular adhesion proteins		22	Adherence
+icaC	Staphylococcus aureus	Intercellular adhesion proteins		22	Adherence
+icaD	Staphylococcus aureus	Intercellular adhesion proteins		22	Adherence
+icaR	Staphylococcus aureus	Intercellular adhesion proteins		22	Adherence
+sdrC	Staphylococcus aureus	SDr		13	Adherence
+sdrD	Staphylococcus aureus	SDr		15	Adherence
+sdrE	Staphylococcus aureus	SDr		13	Adherence
+cap8A	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8B	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8C	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8D	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8E	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8F	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8G	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8H	Staphylococcus aureus	Capsule		11	Antiphagocytosis
+cap8I	Staphylococcus aureus	Capsule		11	Antiphagocytosis
+cap8J	Staphylococcus aureus	Capsule		11	Antiphagocytosis
+cap8K	Staphylococcus aureus	Capsule		11	Antiphagocytosis
+cap8L	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8M	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8N	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8O	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+cap8P	Staphylococcus aureus	Capsule		25	Antiphagocytosis
+aur	Staphylococcus aureus	Aureolysin		24	Exoenzyme
+hysA	Staphylococcus aureus	Hyaluronate lyase		18	Exoenzyme
+geh	Staphylococcus aureus	Lipase		24	Exoenzyme
+lip	Staphylococcus aureus	Lipase		22	Exoenzyme
+sspB	Staphylococcus aureus	Staphopain		25	Exoenzyme
+sspC	Staphylococcus aureus	Staphopain		25	Exoenzyme
+coa	Staphylococcus aureus	Staphylocoagulase		2	Exoenzyme
+sspA	Staphylococcus aureus	V8 protease		24	Exoenzyme
+vWbp	Staphylococcus aureus	vWbp		9	Exoenzyme
+adsA	Staphylococcus aureus	AdsA		25	Immune evasion
+chp	Staphylococcus aureus	CHIPS		4	Immune evasion
+scn	Staphylococcus aureus	SCIN		10	Immune evasion
+sbi	Staphylococcus aureus	Sbi		25	Immune evasion
+spa	Staphylococcus aureus	SpA		8	Immune evasion
+isdA	Staphylococcus aureus	Isd		25	Iron uptake
+isdB	Staphylococcus aureus	Isd		25	Iron uptake
+isdC	Staphylococcus aureus	Isd		25	Iron uptake
+isdD	Staphylococcus aureus	Isd		25	Iron uptake
+isdE	Staphylococcus aureus	Isd		25	Iron uptake
+isdF	Staphylococcus aureus	Isd		25	Iron uptake
+isdG	Staphylococcus aureus	Isd		25	Iron uptake
+srtB	Staphylococcus aureus	Isd		25	Iron uptake
+sak	Staphylococcus aureus	Staphylokinase		11	Plasminogen activator
+esaA	Staphylococcus aureus	Type VII secretion system		24	Secretion system
+esaB	Staphylococcus aureus	Type VII secretion system		24	Secretion system
+esaC	Staphylococcus aureus	Type VII secretion system		20	Secretion system
+essA	Staphylococcus aureus	Type VII secretion system		24	Secretion system
+essB	Staphylococcus aureus	Type VII secretion system		24	Secretion system
+essC	Staphylococcus aureus	Type VII secretion system		20	Secretion system
+esxA	Staphylococcus aureus	Type VII secretion system		24	Secretion system
+esxB	Staphylococcus aureus	Type VII secretion system		20	Secretion system
+hly/hla	Staphylococcus aureus	<alpha>-hemolysin		25	Toxin
+hlb	Staphylococcus aureus	<beta>-hemolysin		25	Toxin
+hld	Staphylococcus aureus	<delta>-hemolysin		25	Toxin
+hlgA	Staphylococcus aureus	<gamma>-hemolysin		25	Toxin
+hlgB	Staphylococcus aureus	<gamma>-hemolysin		25	Toxin
+hlgC	Staphylococcus aureus	<gamma>-hemolysin		25	Toxin
+lukF-PV	Staphylococcus aureus	PVL		1	Toxin
+lukS-PV	Staphylococcus aureus	PVL		1	Toxin
+sea	Staphylococcus aureus	SE		7	Toxin
+seb	Staphylococcus aureus	SE		1	Toxin
+sed	Staphylococcus aureus	SE		4	Toxin
+see	Staphylococcus aureus	SE		3	Toxin
+seh	Staphylococcus aureus	SE		1	Toxin
+selk	Staphylococcus aureus	SE		1	Toxin
+selq	Staphylococcus aureus	SE		1	Toxin
+tsst-1	Staphylococcus aureus	TSST-1		4	Toxin
+sec	Staphylococcus aureus	Enterotoxin C		4	Unclassified
+sell	Staphylococcus aureus	Enterotoxin-like L		4	Unclassified

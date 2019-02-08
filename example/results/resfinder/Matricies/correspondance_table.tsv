@@ -1,0 +1,13 @@
+Genes	Antibiotic resistance	Number
+aac(6')-aph(2'')_1	aminoglycoside	1
+aadD_1	aminoglycoside	1
+ant(9)-Ia_1	aminoglycoside	1
+str_2	aminoglycoside	3
+blaZ_133	beta-lactam	1
+blaZ_138	beta-lactam	7
+blaZ_29	beta-lactam	5
+blaZ_79	beta-lactam	2
+mecA_6	beta-lactam	1
+erm(A)_1	macrolide	1
+tet(K)_1	tetracycline	2
+tet(M)_7	tetracycline	1
