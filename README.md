@@ -1,34 +1,37 @@
-README
-======
+GENIAL : GENes Identification with Abricate for Lucky biologists
+================================================================
 
 Authors : Barbet Pauline, Felten Arnaud
 
 Affiliation: [Food Safety Laboratory - ANSES Maisons Alfort (France)](https://www.anses.fr/en/content/laboratory-food-safety-maisons-alfort-and-boulogne-sur-mer)
 
-You can find the latest version of the tool at [https://github.com/p-barbet/AntiViruce](https://github.com/p-barbet/AntiViruce)
+You can find the latest version of the tool at [https://github.com/p-barbet/GENIAL](https://github.com/p-barbet/GENIAL)
 
 
-Workflow
-========
+GENIAL
+======
 
-This workflow aims to identify antimicrobial resistance and virulence genes from bacterial genomes matching them to a database gathering genes of interest using [ABRicate](https://github.com/tseemann/abricate).
+GENIAL aims to identify antimicrobial resistance and virulence genes from bacterial genomes matching them to a database gathering genes of interest using [ABRicate](https://github.com/tseemann/abricate).
 
-As well as default databases ([Resfinder](https://cge.cbs.dtu.dk/services/ResFinder/), [CARD](https://card.mcmaster.ca/), [ARG-ANNOT](http://backup.mediterranee-infection.com/article.php?laref=282&titre=arg-annot), [NCBI](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA313047), [EcOH](https://github.com/katholt/srst2/tree/master/data), [PlasmidFinder](https://cge.cbs.dtu.dk/services/PlasmidFinder/), [Ecoli_VF](https://github.com/phac-nml/ecoli_vf) and [VFDB](http://www.mgc.ac.cn/VFs/)), it's posible to use your own database.
+### Databases
+
+Default databases available are ([Resfinder](https://cge.cbs.dtu.dk/services/ResFinder/), [CARD](https://card.mcmaster.ca/), [ARG-ANNOT](http://backup.mediterranee-infection.com/article.php?laref=282&titre=arg-annot), [NCBI](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA313047), [EcOH](https://github.com/katholt/srst2/tree/master/data), [PlasmidFinder](https://cge.cbs.dtu.dk/services/PlasmidFinder/), [Ecoli_VF](https://github.com/phac-nml/ecoli_vf) and [VFDB](http://www.mgc.ac.cn/VFs/))
+
+As well as this databes, it's posible to use your own database.
 
 The tool is divided into two scripts.
 
+### GENIALanalysis
 
-### ABRicate analysis
+GENIALanalysis aims to run ABricate. It takes in input a tsv file containing genomes fasta files paths and IDs.If you want to use your own database you also need to provide a multifasta whith genes IDs as headers. Then the script run ABricate and produce in output one ABRicate result file per genome, corresponding to a tsv file including genes found in each sample.
 
-This script aims to run ABricate. It takes in input a tsv file containing genomes fasta files paths and IDs.If you want to use your own database you also need to provide a multifasta whith genes IDs as headers. Then the script run ABricate and produce in output one ABRicate result file per genome, corresponding to a tsv file including genes found in each sample.
+### GENIALresults
 
-### Results production
-
-The second script aims to conditionning ABRicate results in the form of matrixes and heatmaps of presence/absence. It takes in input a temporary file produced by the Abricate analysis containing the genomes Abricate results paths and IDs. In the case of vfdb database a file containing the virulence factors names, their family and species is automticaly included in the script.
+GENIALresults aims to conditionning ABRicate results in the form of matrixes and heatmaps of presence/absence. It takes in input a temporary file produced by the Abricate analysis containing the genomes Abricate results paths and IDs. In the case of vfdb database a file containing the virulence factors names, their family and species is automticaly included in the script.
 
 The output depending on the database used :
 
-* In any case a matrix in tsv format and a heatmap in png format with all genes found are created
+* In any cases a matrix in tsv format and a heatmap in png format with all genes found are created
 
 
 On top of that:
