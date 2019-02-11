@@ -18,7 +18,10 @@ def get_parser() :
 						type=str, choices=["resfinder", "vfdb"], help="database to be updated")
 
 	parser.add_argument("-w", action="store", dest="workdir", 
-					type=str, default =".", help="working directory")
+					type=str, default=".", help="working directory")
+
+	parser.add_argument("-dbp", action="store", dest="dbPath", 
+					type=str, required=True, help="abricate databases repertory")
 
 	return parser
 
@@ -112,7 +115,7 @@ def getVfdbSequences(resdir, dicoSequences) :
 				break
 
 			else :
-				print(newHeader)
+				print("\n" + newHeader)
 
 	os.system("rm " + vfdbFastaName)
 
@@ -164,7 +167,8 @@ def getResfinderSequences(resdir, dicoSequences) :
 					break
 
 				else :
-					print(newHeader)
+					print("\n" + newHeader)
+
 					
 	os.system("rm -R " + resdir + "genomicepidemiology-resfinder_db-d3d7a6ceaa49/")
 
@@ -185,6 +189,21 @@ def writeFinalFasta(dicoSequences, resdir) :
 			sequencePosition += 60
 
 	newVfdbFasta.close()
+
+
+def setupdb(dbName, abricateDbsRepertory, dbMultifasta) :
+
+	multifastaName = dbMultifasta.split("/")[-1] # nom du fichier multifasta de la base a créer
+
+	if abricateDbsRepertory[-1] != "/" :
+		abricateDbsRepertory += "/"
+
+	if not os.path.exists(abricateDbsRepertory + dbName) : # création du répertoire de la base dans abricate si il n"existe pas
+		os.system("mkdir " + abricateDbsRepertory + dbName) 
+
+	os.system("cp " + dbMultifasta + " " + abricateDbsRepertory + dbName) # copie du multifasta dans le répartoire abricate
+
+	os.system("abricate --setupdb") # idexation de la base dans abricate
 
 
 def main():
@@ -220,12 +239,15 @@ def main():
 		vfFileUpdate(RESDIR)
 		getVfdbSequences(RESDIR, dicoSequences)
 		writeFinalFasta(dicoSequences, RESDIR)
+		setupdb(DATABASE, Arguments.dbPath, RESDIR + "sequences")
 
 	if DATABASE == "resfinder" :
 		getResfinderSequences(RESDIR, dicoSequences)
 		writeFinalFasta(dicoSequences, RESDIR)
+		setupdb(DATABASE, Arguments.dbPath, RESDIR + "sequences")
 
 
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
 	main()	  
+
