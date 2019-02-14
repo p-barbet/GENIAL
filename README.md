@@ -122,7 +122,7 @@ To install GENIAL run this command lines :
 	conda config --add channels pbarbet
 	conda install genial
 
-After installing GENIAL you can use simply each script typping their name in a terminal.
+After installing GENIAL you can use simply each script typing their name in a terminal.
 
 
 Test 
