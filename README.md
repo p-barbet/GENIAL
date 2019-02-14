@@ -15,50 +15,75 @@ GENIAL aims to identify antimicrobial resistance and virulence genes from bacter
 
 ### Databases
 
-Default databases available are ([Resfinder](https://cge.cbs.dtu.dk/services/ResFinder/), [CARD](https://card.mcmaster.ca/), [ARG-ANNOT](http://backup.mediterranee-infection.com/article.php?laref=282&titre=arg-annot), [NCBI](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA313047), [EcOH](https://github.com/katholt/srst2/tree/master/data), [PlasmidFinder](https://cge.cbs.dtu.dk/services/PlasmidFinder/), [Ecoli_VF](https://github.com/phac-nml/ecoli_vf) and [VFDB](http://www.mgc.ac.cn/VFs/))
+Four default databases are available : [resfinder](https://cge.cbs.dtu.dk/services/ResFinder/), [vfdb](http://www.mgc.ac.cn/VFs/)), phages(https://www.ebi.ac.uk/genomes/phage.html) and enterotox_staph.
 
-As well as this databes, it's posible to use your own database.
+The table below show which kind of research allow each database :
 
-The tool is divided into two scripts.
+
+|     Database    |          Research type         |
+|:---------------:|:------------------------------:|
+|    resfinder    | antimicrobial resistance genes |
+|       vfdb      |   virulences and toxins genes  |
+|      phages     |             phages             |
+| enterotox_staph |   staphylococcus enterotoxins  |
+
+
+As well as this databases, it's posible to use your own database providing in input the sequences in fasta format with gene IDs as headers.
+
+GENIAL is composed of several scripts :
 
 ### GENIALanalysis
 
-GENIALanalysis aims to run ABricate. It takes in input a tsv file containing genomes fasta files paths and IDs.If you want to use your own database you also need to provide a multifasta whith genes IDs as headers. Then the script run ABricate and produce in output one ABRicate result file per genome, corresponding to a tsv file including genes found in each sample.
+GENIALanalysis aims to run ABricate. It takes in input a tsv file containing genomes fasta files paths and IDs. If you want to use your own database you also need to provide a multifasta whith genes IDs as headers. Then the script run ABricate and produce in output one ABRicate result file per genome, corresponding to a tsv file including genes found in each sample.
+
 
 ### GENIALresults
 
-GENIALresults aims to conditionning ABRicate results in the form of matrixes and heatmaps of presence/absence. It takes in input a temporary file produced by the Abricate analysis containing the genomes Abricate results paths and IDs. In the case of vfdb database a file containing the virulence factors names, their family and species is automticaly included in the script.
+GENIALresults aims to conditionning ABRicate results in the form of presence/absence matricies and heatmaps. It takes in input a temporary file produced by the Abricate analysis containing the genomes Abricate results paths and IDs. In the case of vfdb database a file containing the virulence factors names, their family and species is automticaly included in the script.
 
-The output depending on the database used :
+The output depending on the database used as presented below :
 
-* In any cases a matrix in tsv format and a heatmap in png format with all genes found are created
+| Legend |                    Possible outputs                    |
+|:------:|:------------------------------------------------------:|
+|    1   |               Matrix and heatmap by genes              |
+|    2   |          Matrix and heatmap by genes families          |
+|    3   |       Correspondence table gene name/gene number       |
+|    4   | Correspondence table gene name/gene family/gene number |
 
 
-On top of that:
+|     Database     |  Outputs  |
+|:----------------:|:---------:|
+|       vfdb       | 1 + 2 + 3 |
+|     resfinder    | 1 + 2 + 3 |
+|      phages      |   1 + 4   |
+|  enterotox_staph |   1 + 4   |
+| private database |   1 + 4   |
 
-* If you use one of the default databases [Resfinder](https://cge.cbs.dtu.dk/services/ResFinder/) or [VFDB](http://www.mgc.ac.cn/VFs/) news matrix and heatmap by gene type are produced with a correspondace table between the gene name, its family and its number in all genomes.
 
-* If you don't use one of the two previous databases or if you use your own database, only a corespondance table between the gene name and its number in all genomes is produced in addition.
+Matricies are produced in tsv format and a heatmaps in png format.
+
+
+### GENIAL
+
+GENIAL run the two previous scripts following this workflow for one database :
 
 ![](workflow.PNG?raw=true "script workflow")
 
 
-Dependencies
-============
+### GENIALmultidb
 
-The script has been developed with python 3.6 (tested with 3.6.6)
+GENIALmultidb run GENIAL for several databases and produce a matrix merging all matricies.
 
-### External dependencies
 
-* [ABRicate](https://github.com/tseemann/abricate) tested with 0.8.7
-* [Pandas](https://pandas.pydata.org/) tested with 0.23.4
-* [seaborn](https://seaborn.pydata.org/installing.html) tested with 0.9.0
+### GENIALupdate_databases
+
+GENIALupdate_databases update resfinder or vfdb databases in setup them in ABRicate.
 
 
 Parameters
 ==========
 
-### Command line options
+### Command line options for GENIAL
 
 
 |   Options   |                                                              Description                                                              |        Required        |      Default     |
@@ -69,16 +94,39 @@ Parameters
 |      -T     |                                                        Number of thread to use                                                        |           No           |         1        |
 |      -w     |                                                           Working directory                                                           |           No           |         .        |
 |      -r     |                                                         Results directory name                                                        |           No           | ABRicate_results |
-| --defaultdb |  default databases available : resfinder, card, argannot, acoh, ecoli_vf, plasmidfinder, vfdb or ncbi. Incompatible with --privatedb  | Yes if not --privatedb |                  |
+| --defaultdb |             default databases available : resfinder, vfdb, phages and enterotox staph. Incompatible with --privatedb                  | Yes if not --privatedb |                  |
 | --privatedb |                              Private database name. Implies -dbp and -dbf. Incompatible with --defaultdb                              | Yes if not --defaultdb |                  |
 |   --mincov  |                                                   Minimum proportion of gene covered                                                  |           No           |        80        |
 |   --minid   |                                             Minimum proportion of exact nucleotide matches                                            |           No           |        90        |
 |     --R     |                                          Remove genes present in all genomes from the matrix                                          |           No           |       False      |
 
+
+Dependencies
+============
+
+GENIAL has been developed with python 3.6 (tested with 3.6.6)
+
+### External dependencies
+
+* [ABRicate](https://github.com/tseemann/abricate) tested with 0.8.7
+* [pandas](https://pandas.pydata.org/) tested with 0.23.4
+* [seaborn](https://seaborn.pydata.org/installing.html) tested with 0.9.0
+* [biopython](https://biopython.org/wiki/Download) tested with 1.72
+
+
+Installation
+============
+
+To install GENIAL run this command lines :
+
+	conda config --add channels pbarbet
+	conda install genial
+
+After installing GENIAL you can use simply each script typping their name in a terminal.
+
+
 Test 
 ====
-
-After installing ABRicate and Pandas and seaborn you can test the script with the command line :
 
 ## Default database
 
@@ -87,10 +135,3 @@ After installing ABRicate and Pandas and seaborn you can test the script with th
 ## Private database
 
 	python AntiViruce.py -f input_file.tsv  --privatedb private_db_name -T 10 -r results_directory --minid 90 --mincov 80 -dbp path_to_abricate_databases_repertory -dbf private_db_multifasta_path
-
-
-
-
-
-
-
