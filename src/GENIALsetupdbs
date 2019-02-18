@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import os
+
+condaPath = os.popen("which abricate").readlines()[0].replace("\n","")
+print(condaPath)
+condaDirPath = "/".join(condaPath.split("/")[0:-2])
+print(condaDirPath)
+abricatedbsPath = condaDirPath + "/db/"
+print(abricatedbsPath)
+
+os.system("mkdir " + abricatedbsPath + "enterotox_staph/")
+os.system("mkdir " + abricatedbsPath + "phages/")
+os.system("rm " + abricatedbsPath + "resfinder/*")
+os.system("rm " + abricatedbsPath + "vfdb/*")
+
+os.system("cp " + condaDirPath + "/GENIALfiles/dbs/enterotox_staph/sequences " + abricatedbsPath + "enterotox_staph/")
+os.system("cp " + condaDirPath + "/GENIALfiles/dbs/phages/sequences " + abricatedbsPath + "phages/")
+os.system("cp " + condaDirPath + "/GENIALfiles/dbs/resfinder/sequences " + abricatedbsPath + "resfinder/")
+os.system("cp " + condaDirPath + "/GENIALfiles/dbs/vfdb/sequences " + abricatedbsPath + "vfdb/")
+
+os.system("abricate --setupdb")
