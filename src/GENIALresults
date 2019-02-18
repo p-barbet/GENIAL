@@ -29,9 +29,8 @@ def get_parser() :
 	db_type = parser.add_mutually_exclusive_group(required=True)
 
 	db_type.add_argument("--defaultdb", action="store", dest="defaultDatabase", \
-						type=str, choices=["resfinder", "card",	"argannot", "ecoh", \
-							"ecoli_vf", "plasmidfinder", "vfdb", "ncbi", "vir_clost", "enterotox_staph", "phages"], help="default \
-								database to use (resfinder, card, argannot, ecoh, ecoli_vf, plasmidfinder, vfdb, ncbi. Incompatible with --privatedb)")
+						type=str, choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
+								database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with --privatedb)")
 
 	db_type.add_argument("--privatedb", action="store_true", dest="privateDatabase", \
 						help="private database name. Implies -dbp, -dbf. Incompatible with --defaultdb")
@@ -564,8 +563,8 @@ def main():
 			genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		elif Arguments.defaultDatabase == "vfdb" : 
-
-			dicoVfFamilies = getVfFamiliesDico("VFs.tsv") # construction du dictionnaire des familles de VF
+			genialFilesPath = "/".join(os.popen("which GENIAL").readlines()[0].replace("\n","").split("/")[0:-2]) + "/GENIALfiles/" # GENIAL files path
+			dicoVfFamilies = getVfFamiliesDico(genialFilesPath + "VFs.tsv") # construction du dictionnaire des familles de VF
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies) # construction des objets génomes
 			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 			matrixByGenesTypes = getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes) # construction de la matrica par type de gène
