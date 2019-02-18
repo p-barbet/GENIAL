@@ -75,7 +75,7 @@ GENIAL run the two previous scripts following this workflow for one database :
 GENIALmultidb run GENIAL for several databases and produce a matrix merging all matricies.
 
 
-### GENIALupdate_databases
+### GENIALupdatedbs
 
 GENIALupdate_databases update resfinder or vfdb databases in setup them in ABRicate.
 
@@ -130,8 +130,8 @@ Test
 
 ## Default database
 
-	python AntiViruce.py -f input_file.tsv --defaultdb vfdb -r results_directory --minid 90 --mincov 80
+	python GENIAL -f input_file.tsv --defaultdb vfdb -r results_directory --minid 90 --mincov 80
 
 ## Private database
 
-	python AntiViruce.py -f input_file.tsv  --privatedb private_db_name -T 10 -r results_directory --minid 90 --mincov 80 -dbp path_to_abricate_databases_repertory -dbf private_db_multifasta_path
+	python GENIAL -f input_file.tsv  --privatedb private_db_name -T 10 -r results_directory --minid 90 --mincov 80 -dbp path_to_abricate_databases_repertory -dbf private_db_multifasta_path
