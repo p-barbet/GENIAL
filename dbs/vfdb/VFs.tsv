@@ -1,0 +1,571 @@
+VF_Name	Bacteria	Keyword
+Acinetobactin	Acinetobacter baumannii	Iron uptake; Siderophore
+AdeFGH efflux pump	Acinetobacter baumannii	Biofilm formation
+Bap	Acinetobacter baumannii	Biofilm formation; Adherence
+BfmRS	Acinetobacter baumannii	Regulation; Two-component system
+Capsule	Acinetobacter baumannii	Immune evasion
+Csu fimbriae	Acinetobacter baumannii	Biofilm formation
+LPS	Acinetobacter baumannii	Immune evasion
+OmpA	Acinetobacter baumannii	Adherence; Apopotosis; Serum resistance
+PbpG	Acinetobacter baumannii	Serum resistance; Cellular stability
+Phospholipase C	Acinetobacter baumannii	Enzyme
+Phospholipase D	Acinetobacter baumannii	Enzyme
+PNAG	Acinetobacter baumannii	Biofilm formation
+Quorom sensing	Acinetobacter baumannii	Regulation; Biofilm formation
+Aerolysin	Aeromonas hydrophila	Toxin; Pore-forming toxin; <beta>-pore forming toxin
+Exe T2SS	Aeromonas hydrophila	Secretion system; Type II secretion system
+Flp type IV pili	Aeromonas hydrophila	Adherence; Type IV pili; Type IVb pili
+Lateral flagella	Aeromonas salmonicida	Motility; Colonization
+MSHA type IV pili	Aeromonas hydrophila	Adherence; Type IV pili
+Polar flagella	Aeromonas hydrophila	Motility; Colonization
+RtxA	Aeromonas hydrophila	Toxin; RTX toxin
+T3SS	Aeromonas salmonicida	Secretion system; Type III secretion system
+T6SS	Aeromonas hydrophila	Secretion system; Type VI secretion system
+Tap type IV pili	Aeromonas hydrophila	Adherence; Type IV pili
+Type I pili	Aeromonas hydrophila	Adherence; Type I pili
+AipA	Anaplasma phagocytophilum	Adherence; Invasion
+Asp14	Anaplasma phagocytophilum	Adherence; Invasion
+OmpA	Anaplasma phagocytophilum	Adherence; Invasion
+P44/Msp2 family	Anaplasma phagocytophilum	Immune evasion; Antigenic variation; Adherence
+Rvh T4SS	Anaplasma phagocytophilum	Secretion system; Type IV secretion system; Type IVa
+ALO	Bacillus anthracis	Toxin; Pore-forming toxin; <beta>-PFT
+Anthrax toxin	Bacillus anthracis	Toxin; A-B type; EF: adenylate cyclase; LF: protease
+AtxA	Bacillus anthracis	Regulation
+BslA	Bacillus	Adherence; Biofilm formation
+Capsule	Bacillus anthracis	Antiphagocytosis
+CytK	Bacillus cereus	Toxin; Pore-forming toxin; <beta>-PFT
+HBL	Bacillus cereus	Toxin; Pore-forming toxin; ClyA family PFT
+InhA	Bacillus anthracis	Enzyme; Metalloprotease
+Nhe	Bacillus cereus	Toxin; Pore-forming toxin; ClyA family PFT
+BadA/Vomp	Bartonella henselae	Adherence; Autotransporter
+Flagella	Bartonella bacilliformis	Motility
+LPS	Bartonella henselae	Low endotoxicity
+Trw type IV secretion system	Bartonella henselae	Secretion system; Type IV secretion system; Adherence
+VirB/VirD4 type IV secretion system	Bartonella henselae	Secretion system; Type IV secretion system
+BapC	Bordetella pertussis	Adherence; Autotransporter
+Brk	Bordetella pertussis	Serum resistance
+BvgAS	Bordetella pertussis	Regulation; Two-component system
+Cya	Bordetella pertussis	Toxin; Adenylate cyclase;  RTX toxin
+Dnt	Bordetella pertussis	Toxin; Intracellular toxin; Deamidase; A-B type
+FHA	Bordetella pertussis	Adherence; Two-partner secretion pathway (TPS)
+Fimbriae	Bordetella pertussis	Adherence; Phase variation
+LPS	Bordetella pertussis	Endotoxin
+Pertactin	Bordetella pertussis	Adherence; Autotransporter
+Ptx	Bordetella pertussis	Toxin; Intracellular toxin; ADP-ribosyltransferase; A-B type; Adherence; Type IV secretory protein
+TcfA	Bordetella pertussis	Adherence; Autotransporter
+TCT	Bordetella pertussis	Toxin; Cytotoxin
+TTSS	Bordetella pertussis	Secretion system; Type III secretion system
+BtpA/Btp1/TcpB	Brucella melitensis	Immune evasion; WxxxE motif protein
+BtpB	Brucella suis	Immune evasion; WxxxE motif protein
+BvrR-BvrS	Brucella melitensis	Regulation; Two-component system
+C<beta>G	Brucella melitensis	Intracellular survival
+LPS	Brucella melitensis	Intracellular survival; Intracellular entry; Immuno-modulatory activity
+RicA	Brucella melitensis	Intracellular survival
+VirB type IV secretion system	Brucella melitensis	Secretion system; Type IV secretion system; Intracellular survival and replication
+BimA	Burkholderia pseudomallei	Actin-based intracellular motility; Autotransporters
+BoaA	Burkholderia pseudomallei	Adherence; Autotransporters; Trimeric autotransporters
+BoaB	Burkholderia pseudomallei	Adherence; Autotransporters; Trimeric autotransporters
+Bsa T3SS	Burkholderia pseudomallei	Secretion system; Type III secretion system; Invasion
+Capsule I	Burkholderia pseudomallei	Antiphagocytosis
+CdpA	Burkholderia pseudomallei	Signaling; Intracellular signaling
+Flagella	Burkholderia pseudomallei	Invasion
+Quorum-sensing	Burkholderia pseudomallei	Signaling; Intercellular signaling
+T6SS-1	Burkholderia pseudomallei	Secretion system; Type VI secretion system
+Type IV pili	Burkholderia pseudomallei	Adherence
+CadF	Campylobacter jejuni	Adherence; FnBP
+Capsule	Campylobacter jejuni	Adherence; Phase variation
+CDT	Campylobacter jejuni	Toxin; Intracellular toxin; DNaseI; ABC subunit
+CiaB	Campylobacter jejuni	Invasion
+CiaC	Campylobacter jejuni	Invasion
+Flagella	Campylobacter jejuni	Motility; Chemotaxis; Invasion; Phase variation
+JlpA	Campylobacter jejuni	Adherence
+LOS	Campylobacter jejuni	Adherence; Phase variation; Structural mimicry
+MOMP	Campylobacter jejuni	Adherence
+PEB1	Campylobacter jejuni	Adherence
+Type IV secretion system	Campylobacter jejuni	Secretion system; Invasion
+TTSS	Chlamydia trachomatis	Secretion system; Type III secretion system
+alpha-clostripain	Clostridium perfringens	Exoenzyme; Cysteine endopeptidase
+alpha-toxin (CpPLC)	Clostridium perfringens	Toxin; Zinc-metallophospholipase C
+alpha-toxin (novyi)	Clostridium novyi	Toxin; Intracellular toxin; Glucosyltransferase
+alpha-toxin (septicum)	Clostridium septicum	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel); Aerolysin-family
+beta-toxin	Clostridium perfringens	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel)
+beta2-toxin	Clostridium perfringens	Toxin
+BoNT	Clostridium botulinum	Toxin; Intracellular toxin; Neurotoxin; Metalloproteinase; Zn2+-dependent endopeptidase
+C2 toxin	Clostridium botulinum	Toxin; Intracellular toxin; A-B type; ADP-ribosyltransferase
+C3 toxin	Clostridium botulinum	Toxin; Intracellular toxin; ADP-ribosyltransferase
+CDT	Clostridium difficile	Toxin; Intracellular toxin; A-B type; ADP-ribosyltransferase
+CPE	Clostridium perfringens	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel)
+epsilon-toxin	Clostridium perfringens	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel); Aerolysin-family
+iota-toxin	Clostridium perfringens	Toxin; Intracellular toxin; A-B type; ADP-ribosyltransferase
+kappa-toxin	Clostridium perfringens	Exoenzyme; Collagenase
+mu-toxin	Clostridium perfringens	Exoenzyme; Carbohydrate-active enzyme; Hyaluronidase
+sialidase	Clostridium perfringens	Exoenzyme; Carbohydrate-active enzyme; Sialidase
+TcdA	Clostridium difficile	Toxin; Intracellular toxin; Glucosyltransferase
+TcdB	Clostridium difficile	Toxin; Intracellular toxin; Glucosyltransferase
+TeNT	Clostridium tetani	Toxin; Intracellular toxin; Neurotoxin; Metalloproteinase; Zn2+-dependent endopeptidase
+theta-toxin/PFO	Clostridium perfringens	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel); Cholesterol-dependent cytolysin
+DT	Corynebacterium diphtheriae	Toxin; Intracellular toxin; ADP-ribosyltransferase; A-B type
+Pili	Corynebacterium diphtheriae	Adherence
+Dot/Icm T4SS	Coxiella burnetii	Secretion system; Type IV secretion system; Type IVb
+Ace	Enterococcus faecalis	Adherence; MSCRAMM
+Acm	Enterococcus faecium	Adherence; MSCRAMM
+AS	Enterococcus faecalis	Adherence
+BopD	Enterococcus faecalis	Biofilm formation
+Capsule	Enterococcus faecalis	Antiphagocytosis
+Cytolysin	Enterococcus faecalis	Toxin; Hemolysin/bacteriocin; Biofilm formation
+Ebp pili	Enterococcus faecalis	Adherence; Biofilm formation; Sortase-assembled pili
+EcbA	Enterococcus faecium	Adherence; MSCRAMM
+EfaA	Enterococcus faecalis	Adherence
+Esp	Enterococcus faecalis	Adherence; Biofilm formation
+Fsr	Enterococcus faecalis	Quorum sensing system; Two-component system
+Gelatinase	Enterococcus faecalis	Exoenzyme; Zinc metalloproteinase; Biofilm formation
+Hyaluronidase	Enterococcus faecalis	Exoenzyme; Spreading factor
+Scm	Enterococcus faecium	Adherence; MSCRAMM
+SgrA	Enterococcus faecium	Adherence; Biofilm formation
+SprE	Enterococcus faecalis	Exoenzyme; Serine protease
+Afa/Dr family	Escherichia coli (DAEC)	Adherence
+AAFs	Escherichia coli (EAEC)	Adherence
+Dispersin	Escherichia coli (EAEC)	Adherence
+EAST1	Escherichia coli (EAEC)	Toxin; Membrane-acting; Guanylate cyclase
+Pet	Escherichia coli (EAEC)	Toxin; Intracellular toxin; Serine protease; Autotransporter
+Pic	Escherichia coli (EAEC)	Toxin; Serine protease; Autotransporter
+ShET1	Escherichia coli (EAEC)	Toxin; A-B type; Enterotoxin
+Chu	Escherichia coli (EHEC)	Iron uptake; Heme uptake
+Cif	Escherichia coli (EHEC)	Type III translocated protein
+ECP	Escherichia coli (EHEC)	Adherence
+Efa-1/LifA	Escherichia coli (EHEC)	Adherence
+EspA	Escherichia coli (EHEC)	Type III translocated protein; Adherence
+EspB	Escherichia coli (EHEC)	Type III translocated protein; Translocon apparatus
+EspD	Escherichia coli (EHEC)	Type III translocated protein; Translocon apparatus
+EspF	Escherichia coli (EHEC)	Type III translocated protein
+EspG	Escherichia coli (EHEC)	Type III translocated protein
+EspH	Escherichia coli (EHEC)	Type III translocated protein
+EspP	Escherichia coli (EHEC)	Protease; Autotransporter
+Hemolysin	Escherichia coli (EHEC)	Toxin; Membrane-damaging; Pore-forming; RTX toxin
+Intimin	Escherichia coli (EHEC)	Adherence; Autotransporter; Type Ve
+Ler	Escherichia coli (EHEC)	Regulation
+Map	Escherichia coli (EHEC)	Type III translocated protein
+NleA/EspI	Escherichia coli (EHEC)	Type III translocated protein
+NleC	Escherichia coli (EHEC)	Type III translocated protein
+NleD	Escherichia coli (EHEC)	Type III translocated protein
+Paa	Escherichia coli (EHEC)	Adherence
+StcE	Escherichia coli (EHEC)	Protease
+Stx	Escherichia coli (EHEC)	Toxin; A-B type; N-glycosidase
+Tir	Escherichia coli (EHEC)	Type III translocated protein
+ToxB	Escherichia coli (EHEC)	Adherence
+TTSS	Escherichia coli (EHEC)	Secretion system; Type III secretion system
+BFP	Escherichia coli (EPEC)	Adherence; Type IV pilus
+CDT	Escherichia coli (EPEC)	Toxin; Intracellular toxin; DNaseI; ABC subunit
+Cif	Escherichia coli (EPEC)	Type III translocated protein
+EAST1	Escherichia coli (EPEC)	Toxin; Membrane-acting; Guanylate cyclase
+EspA	Escherichia coli (EPEC)	Type III translocated protein; Adherence
+EspB	Escherichia coli (EPEC)	Type III translocated protein
+EspC	Escherichia coli (EPEC)	Protease; Autotransporter
+EspD	Escherichia coli (EPEC)	Type III translocated protein
+EspF	Escherichia coli (EPEC)	Type III translocated protein
+EspG	Escherichia coli (EPEC)	Type III translocated protein
+EspH	Escherichia coli (EPEC)	Type III translocated protein
+Intimin	Escherichia coli (EPEC)	Adherence; Autotransporter; Type Ve
+Ler	Escherichia coli (EPEC)	Regulation
+Lymphostatin/LifA	Escherichia coli (EPEC)	Adherence
+Map	Escherichia coli (EPEC)	Type III translocated protein
+NleA/EspI	Escherichia coli (EPEC)	Type III translocated protein
+NleC	Escherichia coli (EPEC)	Type III translocated protein
+NleD	Escherichia coli (EPEC)	Type III translocated protein
+Paa	Escherichia coli (EPEC)	Adherence
+Per	Escherichia coli (EPEC)	Regulation
+Tir	Escherichia coli (EPEC)	Type III translocated protein
+TTSS	Escherichia coli (EPEC)	Secretion system; Type III secretion system
+Adhesive fimbriae	Escherichia coli (ETEC)	Adherence
+EtpA	Escherichia coli (ETEC)	Adherence; Autotransporter; TBS
+Heat-labile toxin (LT)	Escherichia coli (ETEC)	Toxin; Intracellular toxin; ADP-ribosyltransferase; A-B type
+Heat-stable toxin (ST)	Escherichia coli (ETEC)	Toxin; Membrane-acting; STa: Guanylate cyclase
+AslA	Escherichia coli (NMEC)	Invasion
+CNF-1	Escherichia coli (NMEC)	Toxin; Intracellular toxin; Deamidase
+FdeC	Escherichia coli (NMEC)	Adherence; Autotransporter; Type Ve
+Ibes	Escherichia coli (NMEC)	Invasion
+K1 capsule	Escherichia coli (NMEC)	Invasion; Antiphagocytosis
+OmpA	Escherichia coli (NMEC)	Invasion; Serum resistance
+S fimbriae	Escherichia coli (NMEC)	Adherence
+TraJ	Escherichia coli (NMEC)	Invasion
+Aerobactin	Escherichia coli (UPEC)	Iron uptake; Siderophore
+Chu	Escherichia coli (UPEC)	Iron uptake; Heme uptake
+CNF-1	Escherichia coli (UPEC)	Toxin; Intracellular toxin; Deamidase
+Dr adhesins	Escherichia coli (UPEC)	Adherence
+Enterobactin	Escherichia coli (UPEC)	Iron uptake; Siderophore
+F1C fimbriae	Escherichia coli (UPEC)	Adherence
+Hemolysin	Escherichia coli (UPEC)	Toxin; Membrane-damaging; Pore-forming; RTX toxin
+IroN	Escherichia coli (UPEC)	Iron uptake; Siderophore receptor
+P fimbriae	Escherichia coli (UPEC)	Adherence
+Pic	Escherichia coli (UPEC)	Protease; Autotransporter
+S fimbriae	Escherichia coli (UPEC)	Adherence
+Sat	Escherichia coli (UPEC)	Protease; Autotransporter
+TcpC	Escherichia coli (UPEC)	Immune evasion
+Tsh	Escherichia coli (UPEC)	Protease; Autotransporter
+Type 1 fimbriae	Escherichia coli (UPEC)	Adherence; Invasion
+Acid phosphatase	Francisella tularensis	Intracellular survival
+AnsP	Francisella tularensis	Metabolic adaptation
+ArgP	Francisella tularensis	Metabolic adaptation
+Biotin synthesis	Francisella tularensis	Metabolic adaptation
+Capsule	Francisella tularensis	Immune evastion
+DipA	Francisella tularensis	Intracellular survival
+EF-Tu	Francisella tularensis	Adherence
+FmvB	Francisella tularensis	Magnesium uptake
+FsaP	Francisella tularensis	Adherence
+FupA	Francisella tularensis	Iron uptake
+GadC	Francisella tularensis	Metabolic adaptation
+GGT	Francisella tularensis	Metabolic adaptation
+IleP	Francisella tularensis	Metabolic adaptation
+LPS	Francisella tularensis	Immune evastion
+OmpA	Francisella tularensis	Intracellular survival
+Purine biosynthesis	Francisella tularensis	Metabolic adaptation
+Pyrimidine biosynthesis	Francisella tularensis	Metabolic adaptation
+Rhizoferrin	Francisella tularensis	Iron uptake; Siderophore-dependent
+RipA	Francisella tularensis	Intracellular survival
+T6SS	Francisella tularensis	Secretion system; Type VI secretion system
+Type IV pili	Francisella tularensis	Adherence
+Capsule	Haemophilus influenzae	Antiphagocytosis
+Haemagglutinating pili	Haemophilus influenzae	Adherence; Phase variation; Fimbrial structure
+Hap	Haemophilus influenzae	Adherence; Autotransporter; Serine protease; Nonfimbrial structure
+Hgp	Haemophilus influenzae	Iron uptake; Heme uptake
+HhuA	Haemophilus influenzae	Iron uptake; Heme uptake
+Hia/Hsf	Haemophilus influenzae	Adherence; Autotransporter; Fimbrial structure
+HitABC	Haemophilus influenzae	Iron uptake; ABC transporter
+HMW1/HMW2	Haemophilus influenzae	Adherence; Autotransporter; Nonfimbrial structure
+HxuABC	Haemophilus influenzae	Iron uptake; Heme uptake
+IgA1 protease	Haemophilus influenzae	IgA1 Protease; Serine protease
+LOS	Haemophilus influenzae	Endotoxin
+OapA	Haemophilus influenzae	Adherence; Nonfimbrial structure
+P2 protein	Haemophilus influenzae	Immune evasion; Phase variation
+P5 protein	Haemophilus influenzae	Adherence; Fimbrial structure; Antigenic drift
+Tbp	Haemophilus influenzae	Iron uptake; Transferrin-binding protein
+BabA	Helicobacter pylori	Adherence
+CagA	Helicobacter pylori	Type IV secretory protein
+Flagella	Helicobacter pylori	Motility
+HopZ	Helicobacter pylori	Adherence
+HP-NAP	Helicobacter pylori	Proinflammatory effect
+Lewis antigen	Helicobacter pylori	Molecular mimicry
+LPS	Helicobacter pylori	Endotoxin; Low toxicity; Adherence
+OipA	Helicobacter pylori	Proinflammatory effect
+SabA	Helicobacter pylori	Adherence
+Type IV secretion system	Helicobacter pylori	Secretion system; Type IV secretion system; Proinflammatory effect
+Urease	Helicobacter pylori	Enzyme; Acid resistance; Colonization
+VacA	Helicobacter pylori	Toxin; Pore-forming; A-B type
+AcrAB	Klebsiella pneumoniae	Efflux pump
+Aerobactin	Klebsiella pneumoniae	Iron acquision; Siderophore
+Allantion utilization	Klebsiella pneumoniae	Nutritional factor
+Capsule	Klebsiella pneumoniae	Immune evasion; Antiphagocytosis
+Colibactin	Klebsiella pneumonia	Toxin; Genotoxin
+Ent	Klebsiella pneumoniae	Iron acquision; Siderophore
+LPS	Klebsiella pneumoniae	Serum resistance; Endotoxin
+RcsAB	Klebsiella pneumoniae	Regulation
+RmpA	Klebsiella pneumoniae	Regulation
+Sal	Klebsiella pneumoniae	Iron acquision; Siderophore
+T6SS	Klebsiella pneumoniae	Secretion system; Type VI secretion system
+Type 3 fimbriae	Klebsiella pneumoniae	Biofilm formation
+Type I fimbriae	Klebsiella pneumoniae	Adherence
+Ybt	Klebsiella pneumoniae	Iron acquision; Siderophore
+<i>lsp</i> T2SS	Legionella pneumophila	Secretion system; Type II secretion system
+CcmC	Legionella pneumophila	Iron uptake
+CsrA	Legionella pneumophila	Regulation
+Dot/Icm	Legionella pneumophila	Secretion system; Type IV secretion system
+enh loci	Legionella pneumophila	
+FeoAB	Legionella pneumophila	Iron uptake; Ferrous iron uptake
+Flagella	Legionella pneumophila	Motility
+FrgA	Legionella pneumophila	Iron uptake; Siderophore
+GspA	Legionella pneumophila	Stress protein
+Hsp60	Legionella pneumophila	Adherence
+IraAB	Legionella pneumophila	Iron uptake
+KatAB	Legionella pneumophila	Stress protein
+Legiobactin	Legionella pneumophila	Iron uptake; Siderophore
+LetA/S	Legionella pneumophila	Regulation; Two-component system
+LigA	Legionella pneumophila	
+LPS	Legionella pneumophila	Endotoxin; Phase variation
+Mip	Legionella pneumophila	Enzyme
+MOMP	Legionella pneumophila	Adherence
+Pht	Legionella pneumophila	Nutrient acquisition; Transporter
+pmiA	Legionella pneumophila	
+RelA	Legionella pneumophila	Regulation; Enzyme
+RpoS	Legionella pneumophila	Regulation
+RtxA	Legionella pneumophila	Toxin; Membrane-damaging; Pore-forming
+SodB	Legionella pneumophila	Stress protein
+SodC	Legionella pneumophila	Stress protein
+Type IV pili	Legionella pneumophila	Adherence
+ActA	Listeria monocytogenes	Actin-based motility; Molecular Mimicry; Autophagy evasion
+Ami	Listeria monocytogenes	Adherence
+Auto	Listeria monocytogenes	Invasion
+BSH	Listeria monocytogenes	Bile resistance
+ClpC	Listeria monocytogenes	Stress protein
+ClpE	Listeria monocytogenes	Stress protein
+ClpP	Listeria monocytogenes	Stress protein
+FbpA	Listeria monocytogenes	Adherence; Chaperone
+GtcA	Listeria monocytogenes	Invasion
+Hpt	Listeria monocytogenes	Metabolic adaptation
+InlA	Listeria monocytogenes	Invasion
+InlB	Listeria monocytogenes	Invasion
+InlC	Listeria monocytogenes	Immune modulator; Cell-to-cell spread
+InlF	Listeria monocytogenes	Adherence
+InlJ	Listeria monocytogenes	Adherence
+InlK	Listeria monocytogenes	Immune modulator
+Lap	Listeria monocytogenes	Adherence
+LapB	Listeria monocytogenes	Adherence
+LLO	Listeria monocytogenes	Toxin; Pore-forming; Thiol-activated cholesterol-binding cytolysin
+LLS	Listeria monocytogenes	Toxin; Pore-forming
+LntA	Listeria monocytogenes	Immune modulator
+LpeA	Listeria monocytogenes	Invasion
+LplA1	Listeria monocytogenes	Intracellular growth
+Lsp	Listeria monocytogenes	Peptidase
+Mpl	Listeria monocytogenes	Exoenzyme; Zinc metalloproteinase
+OatA	Listeria monocytogenes	Immune evasion
+p60	Listeria monocytogenes	Invasion
+PgdA	Listeria monocytogenes	Immune evasion
+PlcA	Listeria monocytogenes	Exoenzyme; Membrane-damaging; Phospholipase
+PlcB	Listeria monocytogenes	Exoenzyme; Membrane-damaging; Phospholipase
+PrfA	Listeria monocytogenes	Regulation
+PrsA2	Listeria monocytogenes	Intracellular growth; Protein folding
+SMase	Listeria ivanovii	Exoenzyme; Membrane-damaging; Sphingomyelinase C
+SvpA	Listeria monocytogenes	Iron aquisition; Heme uptake
+Vip	Listeria monocytogenes	Invasion
+AhpC	Mycobacterium tuberculosis	Stress protein
+Antigen 85	Mycobacterium tuberculosis	Cell wall
+DevRS	Mycobacterium tuberculosis	Regulation; Two-component system
+Erp	Mycobacterium tuberculosis	
+ESAT-6/CFP-10	Mycobacterium tuberculosis	Secreted proteins; ESX-1 substrates
+ESX-1	Mycobacterium tuberculosis	Secretion system; Type VII secretion system
+ESX-3	Mycobacterium tuberculosis	Secretion system; Type VII secretion system
+ESX-5	Mycobacterium tuberculosis	Secretion system; Type VII secretion system
+FadD33	Mycobacterium tuberculosis	Metabolic adaptation
+HbhA	Mycobacterium tuberculosis	
+HspR	Mycobacterium tuberculosis	Regulation
+HspX	Mycobacterium tuberculosis	Heat-shock protein
+IdeR	Mycobacterium tuberculosis	Regulation
+Isocitrate lyase	Mycobacterium tuberculosis	Metabolic adaptation
+KatG	Mycobacterium tuberculosis	Stress protein
+LAM	Mycobacterium tuberculosis	Cell wall
+LipF	Mycobacterium tuberculosis	Metabolic adaptation
+MgtC	Mycobacterium tuberculosis	Magnesium uptake
+MmaA4	Mycobacterium tuberculosis	Cell wall
+MprAB	Mycobacterium tuberculosis	Regulation; Two-component system
+Mycobactin	Mycobacterium tuberculosis	Iron uptake; Siderophore
+Nitrate reductase	Mycobacterium tuberculosis	Metabolic adaptation
+PanC/PanD	Mycobacterium tuberculosis	Metabolic adaptation
+PcaA	Mycobacterium tuberculosis	Cell wall
+PDIM	Mycobacterium tuberculosis	Cell wall
+PE/PE-PGRS	Mycobacterium tuberculosis	
+PhoP	Mycobacterium tuberculosis	Regulation
+Phospholipase C	Mycobacterium tuberculosis	Toxin; Membrane-damaging
+RelA	Mycobacterium tuberculosis	Regulation
+SigA	Mycobacterium tuberculosis	Regulation; Sigma factor
+SigE	Mycobacterium tuberculosis	Regulation; Sigma factor
+SigF	Mycobacterium tuberculosis	Regulation; Sigma factor
+SigH	Mycobacterium tuberculosis	Regulation; Sigma factor
+SodA	Mycobacterium tuberculosis	Stress protein
+SodC	Mycobacterium tuberculosis	Stress protein
+WhiB3	Mycobacterium tuberculosis	Regulation
+CARDS toxin	Mycoplasma pneumoniae	Toxin
+Cytadherence organelle	Mycoplasma pneumoniae	Adherence
+P97/P102 paralog family	Mycoplasma hyopneumoniae	Adherence
+Surface lipoproteins	Mycoplasma pneumoniae	Antigenic variation; Immune evasion
+Capsule	Neisseria meningitidis	Antiphagocytosis
+FarAB	Neisseria meningitidis	Efflux pump
+FbpABC	Neisseria meningitidis	Iron uptake; ABC transporter
+fHbp	Neisseria meningitidis	Immune modulator
+HmbR	Neisseria meningitidis	Iron uptake; Heme uptake; Phase variation
+HpuAB	Neisseria meningitidis	Iron uptake; Heme uptake; Phase variation; Two-component TonB-dependent receptors
+IgA1 protease	Neisseria meningitidis	IgA1 Protease; Autotransporter; Serine protease
+KatA	Neisseria meningitidis	Stress protein
+Lbp	Neisseria meningitidis	Iron uptake; Two-component TonB-dependent receptors
+LOS	Neisseria meningitidis	Adherence; Endotoxin
+MntABC	Neisseria meningitidis	Stress protein
+MsrAB	Neisseria meningitidis	Stress protein
+MtrCDE	Neisseria meningitidis	Efflux pump
+NspA	Neisseria meningitidis	Immune modulator
+Opa	Neisseria meningitidis	Invasion; Phase variation; Beta barrel protein
+Opc	Neisseria meningitidis	Invasion; Phase variation; Beta barrel protein
+Porin	Neisseria meningitidis	Invasion; Phagosome maturation
+RecN	Neisseria meningitidis	Stress protein
+Tbp	Neisseria meningitidis	Iron uptake; Two-component TonB-dependent receptors
+Type IV pili	Neisseria meningitidis	Adherence; Phase variation
+Alginate	Pseudomonas aeruginosa	Antiphagocytosis; Serum resistance
+Alkaline protease	Pseudomonas aeruginosa	Protease
+ExoA	Pseudomonas aeruginosa	Toxin; Intracellular toxin; ADP-ribosyltransferase; A-B type; Molecular mimicry
+ExoS	Pseudomonas aeruginosa	Toxin; Type III translocated protein; ADP-ribosyltransferase and GTPase activating
+ExoT	Pseudomonas aeruginosa	Toxin; Type III translocated protein; Intracellular toxin; ADP-ribosyltransferase and GTPase activating
+ExoU	Pseudomonas aeruginosa	Toxin; Type III translocated protein; Phospholipase
+ExoY	Pseudomonas aeruginosa	Toxin; Type III translocated protein; Intracellular toxin; Adenylate cyclase
+Flagella	Pseudomonas aeruginosa	Adherence; Motility
+HSI-I	Pseudomonas aeruginosa	Secretion system; Type VI secretion system
+LasA	Pseudomonas aeruginosa	Protease; Serine protease
+LasB	Pseudomonas aeruginosa	Protease; Zinc metalloproteinase
+LPS	Pseudomonas aeruginosa	Adherence; Endotoxin
+PLC	Pseudomonas aeruginosa	Toxin; Membrane-damaging; Phospholipase
+Pyochelin	Pseudomonas aeruginosa	Iron uptake; Siderophore
+Pyocyanin	Pseudomonas aeruginosa	Pigment; Antimicrobial activity
+Pyoverdine	Pseudomonas aeruginosa	Iron uptake; Siderophore; Pigment
+Quorum sensing	Pseudomonas aeruginosa	Regulation; Quorum sensing system
+Rhamnolipid	Pseudomonas aeruginosa	Biosurfactant
+TTSS	Pseudomonas aeruginosa	Secretion system; Type III secretion system
+Type IV pili	Pseudomonas aeruginosa	Adherence; Twitching motility
+xcp secretion system	Pseudomonas aeruginosa	Secretion system; Type II secretion system
+Adr1	Rickettsia typhi	Adherence; Serum resistance
+Adr2	Rickettsia typhi	Adherence; Invasion
+Phospholipase A2	Rickettsia typhi	Enzyme; Phospholipase
+Pld	Rickettsia typhi	Enzyme; Phospholipase D
+RickA	Rickettsia conorii	Actin-based motility
+rOmpA/Sca0	Rickettsia rickettsii	Adherence; Autotransporter
+rOmpB/Sca5	Rickettsia typhi	Adherence; Invasion; Autotransporter
+Rvh T4SS	Rickettsia typhi	Secretion system; Type IV secretion system; Type IVa
+Sca1	Rickettsia typhi	Adherence; Autotransporter
+Sca2	Rickettsia typhi	Actin-based motility; Autotransporter
+Sca4	Rickettsia typhi	Adherence; Invasion
+TlyC	Rickettsia typhi	Enzyme; Hemolysin
+Agf	Salmonella enterica (serovar typhimurium)	Adherence; Fimbrial
+CdtB	Salmonella enterica (serovar typhi)	Toxin; Intracellular toxin; DNaseI
+Fur	Salmonella enterica (serovar typhimurium)	Regulation
+GrvA	Salmonella enterica (serovar typhimurium)	Antivirulence
+Lpf	Salmonella enterica (serovar typhimurium)	Adherence; Fimbrial
+MgtBC	Salmonella enterica (serovar typhimurium)	Magnesium uptake
+Mig-14	Salmonella enterica (serovar typhimurium)	Resistance to antimicrobial peptides
+Mig-5	Salmonella enterica (serovar typhimurium)	
+MisL	Salmonella enterica (serovar typhimurium)	Adherence; Nonfimbrial; Autotransporter
+Pef	Salmonella enterica (serovar typhimurium)	Adherence; Fimbrial
+PhoPQ	Salmonella enterica (serovar typhimurium)	Regulation; Two-component system
+RatB	Salmonella enterica (serovar typhimurium)	Adherence; Nonfimbrial
+Rck	Salmonella enterica (serovar typhimurium)	Serum resistance; Adherence; Invasion
+RpoS	Salmonella enterica (serovar typhimurium)	Regulation; Sigma factor
+ShdA	Salmonella enterica (serovar typhimurium)	Adherence; Nonfimbrial; Autotransporter
+SinH	Salmonella enterica (serovar typhimurium)	Adherence; Nonfimbrial
+SodCI	Salmonella enterica (serovar typhimurium)	Stress protein
+Spv	Salmonella enterica (serovar typhimurium)	Toxin; Intracellular toxin; ADP-ribosyltransferase
+TTSS(SPI-1 encode)	Salmonella enterica (serovar typhimurium)	Secretion system; Type III secretion system; Invasion
+TTSS(SPI-2 encode)	Salmonella enterica (serovar typhimurium)	Secretion system; Type III secretion system
+Type 1 fimbriae	Salmonella enterica (serovar typhimurium)	Adherence; Fimbrial
+Vi antigen	Salmonella enterica (serovar typhi)	Immune evasion
+Aerobactin	Shigella flexneri	Iron uptake; Siderophore
+IcsA (VirG)	Shigella flexneri	Actin-based motility; Autotransporter
+IcsP (SopA)	Shigella flexneri	Protease; Serine protease; Autotransporter
+LPS	Shigella flexneri	Endotoxin
+Pic	Shigella flexneri	Protease; Serine protease; Autotransporter
+ShET1	Shigella flexneri	Toxin; A-B type; Enterotoxin
+ShET2	Shigella flexneri	Toxin; Enterotoxin
+Shiga toxin	Shigella dysenteriae (serotype 1 only)	Toxin; Intracellular toxin; N-glycosidase; A-B5 type
+Shu	Shigella dysenteriae (serotype 1)	Iron uptake; Heme uptake
+SigA	Shigella flexneri	Protease; Serine protease; Autotransporter
+T2SS	Shigella dysenteriae	Secretion system; Type II secretion system
+TTSS	Shigella flexneri	Secretion system; Type III secretion system; Invasion
+<alpha>-hemolysin	Staphylococcus aureus	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel)
+<beta>-hemolysin	Staphylococcus aureus	Toxin; Membrane-damaging; Hydrolase
+<delta>-hemolysin	Staphylococcus aureus	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving alpha-helix-containing toxin
+<gamma>-hemolysin	Staphylococcus aureus	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel); Biocomponent leukocidin
+AdsA	Staphylococcus aureus	Immune evasion
+Aureolysin	Staphylococcus aureus	Exoenzyme; Protease; Zinc metalloproteinase
+Capsule	Staphylococcus aureus	Antiphagocytosis
+CHIPS	Staphylococcus aureus	Immune evasion
+Clumping factor	Staphylococcus aureus	Adherence
+CNA	Staphylococcus aureus	Adherence
+Eap/Map	Staphylococcus aureus	Adherence
+EbpS	Staphylococcus aureus	Adherence
+Exfoliative toxin	Staphylococcus aureus	Toxin; Serine protease
+FnBPs	Staphylococcus aureus	Adherence
+Hyaluronate lyase	Staphylococcus aureus	Exoenzyme; Spreading factor
+Intercellular adhesion proteins	Staphylococcus aureus	Adherence; Biofilm formation
+Isd	Staphylococcus aureus	Iron uptake; Heme uptake
+Lipase	Staphylococcus aureus	Exoenzyme; Lipase
+PVL	Staphylococcus aureus	Toxin; Membrane-damaging; Pore-forming; Channel-forming involving beta-sheet-containing toxin (beta-barrel); Biocomponent leukocidin
+Sbi	Staphylococcus aureus	Immune evasion
+SCIN	Staphylococcus aureus	Immune evasion
+SDr	Staphylococcus aureus	Adherence; MSCRAMMs
+SE	Staphylococcus aureus	Toxin; Membrane-acting; Superantigen
+SpA	Staphylococcus aureus	Immune evasion; Adherence
+Staphopain	Staphylococcus aureus	Exoenzyme; Protease; Cysteine protease
+Staphylocoagulase	Staphylococcus aureus	Exoenzyme
+Staphylokinase	Staphylococcus aureus	Plasminogen activator; Tissue invasion
+TSST-1	Staphylococcus aureus	Toxin; Membrane-acting; Superantigen
+Type VII secretion system	Staphylococcus aureus	Secretion system; Type VII secretion system
+V8 protease	Staphylococcus aureus	Exoenzyme; Protease; Serine protease
+vWbp	Staphylococcus aureus	Exoenzyme
+<alpha>-C protein	Streptococcus agalactiae	Invasion; Phase variation
+<beta>-C protein	Streptococcus agalactiae	Antiphagocytosis; Serum resistance
+<beta>-haemolysin/cytolysin	Streptococcus agalactiae	Toxin; Membrane-damaging; Pore-forming
+Autolysin	Streptococcus pneumoniae	Protease; Hydrolase; Amidase
+C5a peptidase	Streptococcus pyogenes	Immune evasion; Complement protease; Adherence; Surface-associated adhesin
+C5a peptidase	Streptococcus agalactiae	Immune evasion; Complement protease; Adherence; Surface-associated adhesin
+CAMP factor	Streptococcus agalactiae	Toxin; Membrane-damaging; Pore-forming
+Capsule	Streptococcus pneumoniae	Antiphagocytosis
+Capsule	Streptococcus agalactiae	Antiphagocytosis; Serum resistance
+CbpA/PspC	Streptococcus pneumoniae	Adherence; Complement resistance
+CBPs	Streptococcus pneumoniae	Adherence
+DNase	Streptococcus pyogenes	Exoenzyme; Spreading factor
+FBPs	Streptococcus pyogenes	Adherence; Cellular invasion
+FbsA	Streptococcus agalactiae	Adherence; Phase variation
+FbsB	Streptococcus agalactiae	Adherence; Fibrinogen-binding protein
+GRAB	Streptococcus pyogenes	Anti-proteolysis
+Hyaluronate lyase	Streptococcus pneumoniae	Exoenzyme; Spreading factor
+Hyaluronate lyase	Streptococcus agalactiae	Exoenzyme; Spreading factor
+Hyaluronic acid capsule	Streptococcus pyogenes	Antiphagocytosis; Adherence; Tissue invasion
+Hyaluronidase	Streptococcus pyogenes	Exoenzyme; Spreading factor
+IdeS	Streptococcus pyogenes	Exoenzyme; Cysteine protease; Antiphagocytosis
+IgA1 protease	Streptococcus pneumoniae	IgA1 Protease; Zinc metalloproteinase
+Lmb	Streptococcus agalactiae	Adherence
+M protein	Streptococcus pyogenes	Antiphagocytosis; Adherence; Cellular invasion
+Neuraminidase	Streptococcus pneumoniae	Protease
+PavA	Streptococcus pneumoniae	Adherence
+PavB	Streptococcus pneumoniae	Adherence; Fibronectin-binding protein
+PfbA	Streptococcus pneumoniae	Adherence; MSCRAMMs; Fibronectin-binding protein
+PI-1	Streptococcus agalactiae	Adherence; Sortase-assembled pili
+PI-1	Streptococcus pneumoniae	Adherence; Sortase-assembled pili
+PI-2	Streptococcus pneumoniae	Adherence; Sortase-assembled pili
+PI-2a	Streptococcus agalactiae	Adherence; Sortase-assembled pili
+pilus	Streptococcus pyogenes	Adherence; Sortase-assembled pili
+Pneumolysin	Streptococcus pneumoniae	Toxin; Pore-forming; Thiol-activated cholesterol-binding cytolysin
+PsaA	Streptococcus pneumoniae	Manganese uptake; ABC transporter
+PspA	Streptococcus pneumoniae	Complement resistance
+SIC	Streptococcus pyogenes	Antiphagocytosis
+SLO	Streptococcus pyogenes	Toxin; Pore-forming; Thiol-activated cholesterol-binding cytolysin; Cytolysin-mediated secretion system
+SLS	Streptococcus pyogenes	Toxin; Membrane-damaging; Pore-forming
+SpaP 	Streptococcus mutans	Adherence; Antigen I/II polypeptide family adhesin
+SpeB	Streptococcus pyogenes	Exoenzyme; Cysteine protease; Spreading factor
+Spes	Streptococcus pyogenes	Toxin; Membrane-acting; Superantigen
+Streptokinase	Streptococcus pyogenes	Plasminogen activator; Tissue invasion
+Ace	Vibrio cholerae	Toxin
+ACF	Vibrio cholerae	Adherence
+AI-2	Vibrio cholerae	Regulation; Quorum sensing system
+CAI-1	Vibrio cholerae	Regulation; Quorum sensing system
+CT	Vibrio cholerae	Toxin; Intracellular toxin; ADP-ribosyltransferase; A-B type
+Flagella	Vibrio cholerae	Motility; Colonization; Biofilm formation
+IlpA	Vibrio vulnificus	Adherence
+MAM7	Vibrio parahaemolyticus	Adherence
+MARTX	Vibrio cholerae	Toxin; RTX toxin; Actin monomer cross-linking activity
+MSHA pili	Vibrio cholerae	Adherence; Biofilm formation; Type IV pili; Type IVa
+OmpU	Vibrio vulnificus	Adherence
+T3SS1	Vibrio parahaemolyticus	Secretion system; Type III secretion system
+T3SS2	Vibrio parahaemolyticus	Secretion system; Type III secretion system
+T6SS	Vibrio cholerae	Secretion system; Type VI secretion system
+TCP	Vibrio cholerae	Adherence; Type IV pilus
+TDH	Vibrio parahaemolyticus	Toxin; Pore-forming toxin
+TRH	Vibrio parahaemolyticus	Toxin; Pore-forming toxin
+VCC	Vibrio cholerae	Toxin; Pore-forming toxin; Beta-barrel pore-forming toxin
+Zot	Vibrio cholerae	Toxin
+Ail	Yersinia pestis	Invasion; Serum resistance
+CNF<s>y</s>	Yersinia pseudotuberculosis	Toxin; Intracellular toxin; Deamidase
+F1 antigen	Yersinia pestis	Antiphagocytosis; Capsule
+Flagella	Yersinia enterocolitica	Secretion system; Invasion; Motility
+Invasin	Yersinia pestis	Invasion; Autotransporter; Type Ve
+Invasin B/Ifp	Yersinia pseudotuberculosis	Invasion; Autotransporter
+Invasin C/Ilp	Yersinia pseudotuberculosis	Invasion; Autotransporter
+Invasin D	Yersinia pseudotuberculosis	Invasion; Autotransporter
+Myf/pH6 antigen	Yersinia pestis	Adherence; Fimbrial adhesin; Chaperone/usher pathway
+O-antigen	Yersinia enterocolitica	
+Pla	Yersinia pestis	Protease; Adherence; Bacterial dissemination
+TTSS	Yersinia pestis	Secretion system; Type III secretion system
+Type IV pili	Yersinia enterocolitica	Adherence
+YadA	Yersinia pestis	Adherence; Invasion; Autotransporter; Serum resistance
+YapC	Yersinia pestis	Adherence; Autotransporter
+YapE	Yersinia pestis	Adherence; Autotransporter
+YapJ	Yersinia pestis	Adherence; Autotransporter
+YapK	Yersinia pestis	Adherence; Autotransporter
+YapV	Yersinia pestis	Adherence; Autotransporter
+YaxAB	Yersinia enterocolitica	Toxin; Pore-forming toxin
+Yersiniabactin	Yersinia pestis	Iron uptake; Siderophore
+Ymt	Yersinia pestis	Toxin
+Yst	Yersinia pestis	Toxin; Membrane-acting; Guanylate cyclase
