@@ -17,8 +17,8 @@ setup.py est exécuté par les scripts builssh et bld.bat lors de la constructio
 
 *3. Construire le package et l'upload sur le cloud anaconda
 
-		conda build chemin_du_recipe (création d'un fichier tar.bz2)
-		anaconda upload chemin_du_fichier_tar.bz2 (créer un compte sur le cloud avant)
+	conda build chemin_du_recipe (création d'un fichier tar.bz2)
+	anaconda upload chemin_du_fichier_tar.bz2 (créer un compte sur le cloud avant)
 
 
 *4. Créer un environnement conda*
