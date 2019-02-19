@@ -15,7 +15,7 @@ def get_parser() :
 			formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 	parser.add_argument("-db", action="store", dest="database", required = True,\
-						type=str, choices=["resfinder", "vfdb"], help="database to be updated")
+					type=str, choices=["resfinder", "vfdb"], help="database to be updated")
 
 	parser.add_argument("-w", action="store", dest="workdir", 
 					type=str, default=".", help="working directory")
@@ -59,7 +59,7 @@ def downloadFile(url, resdir, database) :
 
 
 # Fonction qui met à jour le fichier des facteurs de virulence
-def vfFileUpdate(resdir, dbPath) :
+def vfFileUpdate(resdir) :
 
 	vfFileUrl = "www.mgc.ac.cn/VFs/Down/VFs.xls.gz"
 	downloadFile(vfFileUrl, resdir, "vfdb")
@@ -74,7 +74,6 @@ def vfFileUpdate(resdir, dbPath) :
 
 	csvFile = resdir + "VFs.tsv"
 	excelFile.to_csv(csvFile, sep="\t", index=False)
-	os.system("cp " + csvFile + " " + '/'.join(dbPath.split("/")[0:-2]) + "/GENIALfiles/")
 	os.system("rm " + FileName)
 
 	
@@ -116,7 +115,7 @@ def getVfdbSequences(resdir, dicoSequences) :
 				break
 
 			else :
-				print("\n" + newHeader + " est en double")
+				print("\n" + newHeader + "est en double")
 
 	os.system("rm " + vfdbFastaName)
 
@@ -168,7 +167,7 @@ def getResfinderSequences(resdir, dicoSequences) :
 					break
 
 				else :
-					print("\n" + newHeader)
+					print("\n" + newHeader + " est en double")
 
 					
 	os.system("rm -R " + resdir + "genomicepidemiology-resfinder_db-d3d7a6ceaa49/")
@@ -237,7 +236,7 @@ def main():
 	dicoSequences = {}
 	
 	if DATABASE == "vfdb" :
-		vfFileUpdate(RESDIR, Arguments.dbPath)
+		vfFileUpdate(RESDIR)
 		getVfdbSequences(RESDIR, dicoSequences)
 		writeFinalFasta(dicoSequences, RESDIR)
 		setupdb(DATABASE, Arguments.dbPath, RESDIR + "sequences")

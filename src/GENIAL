@@ -19,34 +19,32 @@ def get_parser() :
 	db_type = parser.add_mutually_exclusive_group(required=True)
 
 	db_type.add_argument("--defaultdb", action="store", dest="defaultDatabase", \
-						type=str, choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
-								database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with --privatedb)")
+					type=str, choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
+						database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with --privatedb)")
 
 	db_type.add_argument("--privatedb", action="store", dest="privateDatabase", \
-						type=str, help="private database name. Implies -dbp, -dbf. Incompatible with --defaultdb")
+					type=str, help="private database name. Implies -dbp, -dbf. Incompatible with --defaultdb")
 
 	parser.add_argument("-dbp", action="store", dest="privatedbPath", \
-						type=str, help="path to abricate \
-							databases repertory. Implies -dbf, --privatedb")	
+					type=str, help="path to abricate \
+						databases repertory. Implies -dbf, --privatedb")	
 
 	parser.add_argument("-dbf", action="store", dest="privatedbFasta", \
-						type=str, help="Multifasta containing \
-							the private database sequences. Implies -dbp, --privatedb")	
+					type=str, help="Multifasta containing \
+						the private database sequences. Implies -dbp, --privatedb")	
 
-	parser.add_argument("-T", action="store", dest="nbThreads", 
-					type=str, default="1", help="number of theard to use")
+	parser.add_argument("-T", action="store", dest="nbThreads", type=str, default="1", help="number of theard to use")
 
-	parser.add_argument("-w", action="store", dest="workdir", 
-		type=str, default=".", help="working directory")
+	parser.add_argument("-w", action="store", dest="workdir", type=str, default=".", help="working directory")
 
 	parser.add_argument("-r", action="store", dest="resdir", 
 					type=str, default="ABRicate_results", help="results directory name")
 
 	parser.add_argument("--mincov", action="store", dest="mincov", \
-						type=str, default="80", help="Minimum proportion of gene covered")
+					type=str, default="80", help="Minimum proportion of gene covered")
 
 	parser.add_argument("--minid", action="store", dest="minid", \
-						type=str, default="90", help="Minimum proportion of exact nucleotide matches")
+					type=str, default="90", help="Minimum proportion of exact nucleotide matches")
 
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
@@ -85,26 +83,26 @@ def main():
 
 	if Arguments.defaultDatabase is not None :
 
-		os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --defaultdb " + Arguments.defaultDatabase + " -r " + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+		os.system("python GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --defaultdb " + Arguments.defaultDatabase + " -r " + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
 
 		if os.path.isfile(Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv") :  # vérifie que le fichier abricate_files.tsv existe
 			if Arguments.remove :
-				os.system("GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.defaultDatabase + " --R")
+				os.system("python GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.defaultDatabase + " --R")
 
 			else :
-				os.system("GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.defaultDatabase)
+				os.system("python GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --defaultdb " + Arguments.defaultDatabase)
 
 
 	elif Arguments.privateDatabase is not None :
 
-		os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --privatedb " + Arguments.privateDatabase + " -dbp " + Arguments.privatedbPath + " -dbf " + Arguments.privatedbFasta + " -r " + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+		os.system("python GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --privatedb " + Arguments.privateDatabase + " -dbp " + Arguments.privatedbPath + " -dbf " + Arguments.privatedbFasta + " -r " + Arguments.resdir + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov + " -w " + Arguments.workdir)
 
 		if os.path.isfile(Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv") : # Vérifie que le fichier abricate_files.tsv existe
 			if Arguments.remove :
-				os.system("GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --privatedb --R")
+				os.system("python GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --privatedb --R")
 
 			else :
-				os.system("GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --privatedb")
+				os.system("python GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " --privatedb")
 
 	end = time.time()
 
