@@ -563,8 +563,8 @@ def main():
 			genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		elif Arguments.defaultDatabase == "vfdb" : 
-
-			dicoVfFamilies = getVfFamiliesDico("VFs.csv") # construction du dictionnaire des familles de VF
+			genialFilesPath = "/".join(os.popen("which GENIAL").readlines()[0].replace("\n","").split("/")[0:-2]) + "/GENIALfiles/" # GENIAL files path
+			dicoVfFamilies = getVfFamiliesDico(genialFilesPath + "VFs.tsv") # construction du dictionnaire des familles de VF
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies) # construction des objets génomes
 			matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 			matrixByGenesTypes = getVfdbMatrixByGenesTypes(matrixAllGenes, dicoGenes) # construction de la matrica par type de gène

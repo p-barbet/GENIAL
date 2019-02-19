@@ -24,7 +24,8 @@ def get_parser() :
 					type=str, required=True, nargs="+", choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
 						database list (resfinder, vfdb, enterotox_staph, phages)")
 
-	parser.add_argument("-T", action="store", dest="nbThreads", type=str, default="1", help="number of theard to use")
+	parser.add_argument("-T", action="store", dest="nbThreads", 
+					type=str, default="1", help="number of theard to use")
 
 	parser.add_argument("-w", action="store", dest="workdir", type=str, default=".", help="working directory")
 
@@ -91,16 +92,19 @@ def main():
 
 		newGenesNames = []
 
-		os.system("python GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov)
+		os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " --defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --minid " + Arguments.minid + " --mincov " + Arguments.mincov)
 
 		if os.path.isfile(WORKDIR + RESDIR + db + "/ABRicate_files.tsv") :  # Vérifie que le fichier abricate_files.tsv existe
 			if Arguments.remove :
-				os.system("python GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " --defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --R")
+				os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " --defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --R")
 
 			else :
-				os.system("python GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " --defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db)
+				os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " --defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db)
 		
-		matrix  = pd.read_csv(WORKDIR + RESDIR + db + "/Matricies/matrixAllGenes.tsv", sep = "\t", index_col = 0, dtype = str)
+		try :
+			matrix  = pd.read_csv(WORKDIR + RESDIR + db + "/Matricies/matrixAllGenes.tsv", sep = "\t", index_col = 0, dtype = str)
+		except FileNotFoundError :
+			break
 
 		genes = matrix.columns # liste des gènes
 
@@ -113,13 +117,16 @@ def main():
 
 		allMatrix.append(matrix) # liste de toutes les matrices  à concaténer
 
-	matrix = pd.concat(allMatrix, axis=1)	# concaténation des matrices
+	if not not(allMatrix) :
+		matrix = pd.concat(allMatrix, axis=1)	# concaténation des matrices
 
-	matrix.to_csv(WORKDIR + RESDIR + "matrixAllDatabases.tsv", sep="\t", index = True) # écriture de la matrice dans un fichier tsv
+		matrix.to_csv(WORKDIR + RESDIR + "matrixAllDatabases.tsv", sep="\t", index = True) # écriture de la matrice dans un fichier tsv
 
-	matrix = matrix[matrix.columns].astype(int)
+		matrix = matrix[matrix.columns].astype(int)
 
-	heatmap(matrix, "heatmapAllDatabases.png", WORKDIR + RESDIR, len(genes))
+		heatmap(matrix, "heatmapAllDatabases.png", WORKDIR + RESDIR, len(genes))
+	else :
+		os.system("rm -r " + WORKDIR + RESDIR)
 
 	end = time.time()
 

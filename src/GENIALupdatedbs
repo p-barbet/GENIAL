@@ -59,7 +59,7 @@ def downloadFile(url, resdir, database) :
 
 
 # Fonction qui met à jour le fichier des facteurs de virulence
-def vfFileUpdate(resdir) :
+def vfFileUpdate(resdir, dbPath) :
 
 	vfFileUrl = "www.mgc.ac.cn/VFs/Down/VFs.xls.gz"
 	downloadFile(vfFileUrl, resdir, "vfdb")
@@ -74,6 +74,7 @@ def vfFileUpdate(resdir) :
 
 	csvFile = resdir + "VFs.tsv"
 	excelFile.to_csv(csvFile, sep="\t", index=False)
+	os.system("cp " + csvFile + " " + '/'.join(dbPath.split("/")[0:-2]) + "/GENIALfiles/")
 	os.system("rm " + FileName)
 
 	
@@ -115,7 +116,7 @@ def getVfdbSequences(resdir, dicoSequences) :
 				break
 
 			else :
-				print("\n" + newHeader + "est en double")
+				print("\n" + newHeader + " est en double")
 
 	os.system("rm " + vfdbFastaName)
 
@@ -236,7 +237,7 @@ def main():
 	dicoSequences = {}
 	
 	if DATABASE == "vfdb" :
-		vfFileUpdate(RESDIR)
+		vfFileUpdate(RESDIR, Arguments.dbPath)
 		getVfdbSequences(RESDIR, dicoSequences)
 		writeFinalFasta(dicoSequences, RESDIR)
 		setupdb(DATABASE, Arguments.dbPath, RESDIR + "sequences")
