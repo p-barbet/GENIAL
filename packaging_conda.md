@@ -1,7 +1,7 @@
 Cration d'un package conda
 ==========================
 
-*1. Créer un recipe et d'un fichier*
+1. *Créer un recipe*
 
 Le recipe est composé de 3 scripts :
 
@@ -10,31 +10,31 @@ Le recipe est composé de 3 scripts :
 * bld.bat contient les commandes pour construire le package sur Windows
 
 
-*2. Céer un fichier setup.py*
+2. *Céer un fichier setup.py*
 
 setup.py est exécuté par les scripts builssh et bld.bat lors de la construction du package
 
 
-*3. Construire le package et l'upload sur le cloud anaconda
+3. *Construire le package et l'upload sur le cloud anaconda*
 
 	conda build chemin_du_recipe (création d'un fichier tar.bz2)
 	anaconda upload chemin_du_fichier_tar.bz2 (créer un compte sur le cloud avant)
 
 
-*4. Créer un environnement conda*
+4. *Créer un environnement conda*
 
 	conda create -n nom_env
 	conda activate
-	conda activate nom_env*
+	conda activate nom_env
 
 
-*5. Installer le package*
+5. *Installer le package*
 
 	conda config --add channels nom_channel
 	conda install nom_package
 
 
-*6. Documentation*
+6. *Documentation*
 
 * Création du récipé : [https://conda.io/projects/conda-build/en/latest/source/recipe.html](https://conda.io/projects/conda-build/en/latest/source/recipe.html)
 * Création du meta.yaml : [https://conda.io/projects/conda-build/en/latest/source/resources/define-metadata.html](https://conda.io/projects/conda-build/en/latest/source/resources/define-metadata.html)
