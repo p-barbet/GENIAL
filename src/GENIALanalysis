@@ -5,6 +5,7 @@
 import os, sys, time
 import argparse
 import pandas as pd
+import uuid
 
 
 def get_parser() :
@@ -106,7 +107,7 @@ def setupPrivatedb(dbMultifasta, dbRepertoryPath, dbName) :
 
 
 # Fonction qui lance ABRicate pour chaque genome (par défaut mincov = 80 et minid = 90)
-	def runABRicate(dicoGenomes, dbName, mincov, minid, analysisDirectory, nbThreads, dbRepertoryPath) :
+def runABRicate(dicoGenomes, dbName, mincov, minid, analysisDirectory, nbThreads, dbRepertoryPath) :
 
 	for genome in dicoGenomes :
 
@@ -204,9 +205,9 @@ def main():
 	else : # si base de données par défaut
 		DATABASE_NAME = Arguments.defaultDatabase
 
-		abricateLoc = os.popen("which abricate").readlines()[0].replace("\n","")
+		abricateLoc = os.popen("which GENIAL").readlines()[0].replace("\n","")
 
-		DB_REPERTORY_PATH = "/".join(abricateLoc.split("/")[0:-2]) + "/db/"
+		DB_REPERTORY_PATH = "/".join(abricateLoc.split("/")[0:-2]) + "/dbs/"
 
 
 	beginAbricate = time.time()
@@ -223,7 +224,6 @@ def main():
 	end = time.time()
 	abricateTime = endAbricate - beginAbricate
 
-	print("\n")
 	print("ABRicate total execution time by strain : " + str(round(abricateTime/len(dicoGenomes),3)))
 	print ("ABRicate analysis execution time : " + str(round(end - begin,3)) + " seconds")
 
