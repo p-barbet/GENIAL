@@ -205,9 +205,9 @@ def main():
 	else : # si base de données par défaut
 		DATABASE_NAME = Arguments.defaultDatabase
 
-		abricateLoc = os.popen("which GENIAL").readlines()[0].replace("\n","")
+		abricateLoc = os.popen("which abricate").readlines()[0].replace("\n","")
 
-		DB_REPERTORY_PATH = "/".join(abricateLoc.split("/")[0:-2]) + "/dbs/"
+		DB_REPERTORY_PATH = "/".join(abricateLoc.split("/")[0:-2]) + "/db/"
 
 
 	beginAbricate = time.time()
