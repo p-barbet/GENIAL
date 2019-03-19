@@ -496,10 +496,10 @@ def genesTypesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes) :
 		heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
 	except RecursionError : 
-		print("Erreur lors de la construction de la heatmap, la matrice est trop grande") # affichage d'un message d'erreur si la matrice est trop grande
+		print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
 
 	except TclError :
-		print("Erreur : La construction de la heatmap nécéssite trop de mémoire") # affichage d'un message d'erreur si la matrice est trop grande
+		print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
 
 
 
