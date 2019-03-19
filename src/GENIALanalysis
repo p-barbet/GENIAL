@@ -98,8 +98,6 @@ def setupPrivatedb(dbMultifasta, dbRepertoryPath, dbName) :
 	os.system("mkdir " + dbRepertoryPath)
 	os.system("mkdir " + dbRepertoryPath + dbName) 
 
-	print(dbRepertoryPath)
-
 	os.system("cp " + dbMultifasta + " " + dbRepertoryPath + dbName) # copie du multifasta dans le répartoire abricate
 
 	os.system("mv " + dbRepertoryPath + dbName + "/" + multifastaName + " " + dbRepertoryPath + dbName  + "/sequences") # renommage du multifasta en "sequences"
