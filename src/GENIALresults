@@ -28,12 +28,12 @@ def get_parser() :
 
 	db_type = parser.add_mutually_exclusive_group(required=True)
 
-	db_type.add_argument("--defaultdb", action="store", dest="defaultDatabase", \
+	db_type.add_argument("-defaultdb", action="store", dest="defaultDatabase", \
 					type=str, choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
-						database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with --privatedb)")
+						database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with -privatedb)")
 
-	db_type.add_argument("--privatedb", action="store_true", dest="privateDatabase", \
-					help="private database name. Implies -dbp, -dbf. Incompatible with --defaultdb")
+	db_type.add_argument("-privatedb", action="store_true", dest="privateDatabase", \
+					help="private database name. Implies -dbp, -dbf. Incompatible with -defaultdb")
 
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
@@ -440,8 +440,8 @@ def getCorrespondanceTable(matrixAllGenes, dicoGenes) :
 			number.append(nb) # ajout à la liste
 
 
-	corTable["genes"] = genes # remplissage de la colonne gene
-	corTable["number"] = number # remplissage de la colonne effectif
+	corTable["Genes"] = genes # remplissage de la colonne gene
+	corTable["Number"] = number # remplissage de la colonne effectif
 
 	return corTable
 
@@ -471,10 +471,10 @@ def allGenesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes, nbGenes) :
 			heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
 		except RecursionError : 
-			print("Erreur lors de la construction de la heatmap, la matrice est trop grande") # affichage d'un message d'erreur si la matrice est trop grande
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
 
 		except TclError :
-			print("Erreur : La construction de la heatmap nécéssite trop de mémoire") # affichage d'un message d'erreur si la matrice est trop grande
+			print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
 
 	else :
 		try : 
@@ -482,10 +482,10 @@ def allGenesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes, nbGenes) :
 			heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
 		except RecursionError : 
-			print("Erreur lors de la construction de la heatmap, la matrice est trop grande") # affichage d'un message d'erreur si la matrice est trop grande
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
 
 		except TclError :
-			print("Erreur : La construction de la heatmap nécéssite trop de mémoire") # affichage d'un message d'erreur si la matrice est trop grande
+			print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
 
 
 # Fonction qui construit une heatmap par type de gènes
@@ -496,10 +496,10 @@ def genesTypesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes) :
 		heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
 	except RecursionError : 
-		print("Erreur lors de la construction de la heatmap, la matrice est trop grande") # affichage d'un message d'erreur si la matrice est trop grande
+		print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
 
 	except TclError :
-		print("Erreur : La construction de la heatmap nécéssite trop de mémoire") # affichage d'un message d'erreur si la matrice est trop grande
+		print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
 
 
 
@@ -599,7 +599,7 @@ def main():
 		
 	end = time.time()
 
-	print ("Temps de construction des matrices et heatmap : " + str(round(end - begin,3)) + " secondes")
+	print ("Execution time for matrices and heatmaps : " + str(round(end - begin,3)) + " seconds")
 
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":

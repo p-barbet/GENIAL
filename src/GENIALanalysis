@@ -19,20 +19,16 @@ def get_parser() :
 
 	db_type = parser.add_mutually_exclusive_group(required=True)
 
-	db_type.add_argument("--defaultdb", action="store", dest="defaultDatabase", \
+	db_type.add_argument("-defaultdb", action="store", dest="defaultDatabase", \
 						type=str, choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
-							database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with --privatedb)")
+							database to use (resfinder, vfdb, enterotox_staph, phages. Incompatible with -privatedb)")
 
-	db_type.add_argument("--privatedb", action="store", dest="privateDatabase", \
-						type=str, help="private database name. Implies -dbp, -dbf. Incompatible with --defaultdb")
-
-	parser.add_argument("-dbp", action="store", dest="privatedbPath", \
-						type=str, help="path to abricate \
-							databases repertory. Implies -dbf, --privatedb")	
+	db_type.add_argument("-privatedb", action="store", dest="privateDatabase", \
+						type=str, help="private database name. Implies -dbp, -dbf. Incompatible with -defaultdb")	
 
 	parser.add_argument("-dbf", action="store", dest="privatedbFasta", \
 						type=str, help="Multifasta containing \
-							the private database sequences. Implies -dbp, --privatedb")	
+							the private database sequences. Implies -dbp, -privatedb")	
 
 	parser.add_argument("-T", action="store", dest="nbThreads", type=str, default=1, help="number of theard to use")
 
@@ -41,10 +37,10 @@ def get_parser() :
 	parser.add_argument("-r", action="store", dest="resdir", 
 						type=str, default="abricateResults", help="results directory name")
 
-	parser.add_argument("--mincov", action="store", dest="mincov", \
+	parser.add_argument("-mincov", action="store", dest="mincov", \
 						type=str, default="80", help="Minimum proportion of gene covered")
 
-	parser.add_argument("--minid", action="store", dest="minid", \
+	parser.add_argument("-minid", action="store", dest="minid", \
 						type=str, default="90", help="Minimum proportion of exact nucleotide matches")
 
 	parser.add_argument("-o", action="store", dest="outputFile", \
@@ -95,33 +91,29 @@ def getGenomesObjects(inputFile, dicoGenomes) :
 		
 
 # Fonction qui crée la nouvelle base de donée abricate
-def setupPrivatedb(dbName, abricateDbsRepertory, dbMultifasta) :
+def setupPrivatedb(dbMultifasta, dbRepertoryPath, dbName) :
 
 	multifastaName = dbMultifasta.split("/")[-1] # nom du fichier multifasta de la base a créer
 
-	if abricateDbsRepertory[-1] != "/" :
-		abricateDbsRepertory += "/"
+	os.system("mkdir " + dbRepertoryPath)
+	os.system("mkdir " + dbRepertoryPath + dbName) 
 
-	if not os.path.exists(abricateDbsRepertory + dbName) : # création du répertoire de la base dans abricate si il n"existe pas
-		os.system("mkdir " + abricateDbsRepertory + dbName) 
+	print(dbRepertoryPath)
 
-	else : 
-		sys.exit("ERREUR: La base de donnée " + dbName + " existe déjà")
+	os.system("cp " + dbMultifasta + " " + dbRepertoryPath + dbName) # copie du multifasta dans le répartoire abricate
 
-	os.system("cp " + dbMultifasta + " " + abricateDbsRepertory + dbName) # copie du multifasta dans le répartoire abricate
+	os.system("mv " + dbRepertoryPath + dbName + "/" + multifastaName + " " + dbRepertoryPath + dbName  + "/sequences") # renommage du multifasta en "sequences"
 
-	os.system("mv " + abricateDbsRepertory + dbName + "/" + multifastaName + " " + abricateDbsRepertory + dbName + "/" +"sequences") # renommage du multifasta en "sequences"
-
-	os.system("abricate --setupdb") # idexation de la base dans abricate
+	os.system("abricate --setupdb --datadir " + dbRepertoryPath) # idexation de la base dans abricate
 
 
 # Fonction qui lance ABRicate pour chaque genome (par défaut mincov = 80 et minid = 90)
-def runABRicate(dicoGenomes, dbName, mincov, minid, analysisDirectory, nbThreads) :
+	def runABRicate(dicoGenomes, dbName, mincov, minid, analysisDirectory, nbThreads, dbRepertoryPath) :
 
 	for genome in dicoGenomes :
 
 		abricateResult = analysisDirectory + "ABRicate_" + dicoGenomes[genome].ID + "_" + dbName + ".tsv" # nom du fichier résultat de l'analyse
-		os.system("abricate " + dicoGenomes[genome].fastaFile + " --db " + dbName + " --mincov " + mincov + " --minid " + minid + " --threads " + str(nbThreads) + " > " + abricateResult) # lancement d'ABRicate
+		os.system("abricate " + dicoGenomes[genome].fastaFile + " --db " + dbName + " -mincov " + mincov + " -minid " + minid + " --threads " + str(nbThreads) + " --datadir " + dbRepertoryPath + " > " + abricateResult) # lancement d'ABRicate
 
 		dfResult = pd.read_csv(abricateResult, sep="\t", index_col=0, dtype = str) # lecture du fichier résultat avec pandas (dataframe)
 
@@ -149,15 +141,9 @@ def getABRicateFilesList(resultsDirectory, dicoGenomes, outputFile) :
 
 
 # Fonction qu supprime la base de donnée privée
-def uninstall_private_db(dbName, abricateDbsRepertory) :
+def uninstall_private_db(tempRepertory) :
 
-	if abricateDbsRepertory[-1] != "/" :
-		abricateDbsRepertory += "/"
-	
-	os.system("rm -R " + abricateDbsRepertory + dbName)
-
-	os.system("abricate --setupdb")
-
+	os.system("rm -R " + tempRepertory)
 	
 def main():
 	
@@ -173,11 +159,11 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
-	if Arguments.privateDatabase is not None and (Arguments.privatedbPath is None or Arguments.privatedbFasta is None) : # Vérification que les arguments -dbp et-dbf sont bien présents si la base de donées choisie est privée
-		 parser.error("--privatedb argument requires -dbp and -dbf.")
+	if Arguments.privateDatabase is not None and (Arguments.privatedbFasta is None) : # Vérification que les arguments -dbp et-dbf sont bien présents si la base de donées choisie est privée
+		 parser.error("-privatedb argument requires -dbp and -dbf.")
 
-	if Arguments.defaultDatabase is not None and (Arguments.privatedbPath is not None or Arguments.privatedbFasta is not None) : # Vérification que les arguments -dbp et-dbf en cas de base de données par défaut
-		 parser.error("--defaultdb argument not requires -dbp and -dbf.")
+	if Arguments.defaultDatabase is not None and (Arguments.privatedbFasta is not None) : # Vérification que les arguments -dbp et-dbf en cas de base de données par défaut
+		 parser.error("-defaultdb argument not requires -dbp and -dbf.")
 
 	begin = time.time()
 
@@ -210,29 +196,38 @@ def main():
 
 	if Arguments.privateDatabase is not None : # si base de données privée
 		DATABASE_NAME = Arguments.privateDatabase
-		setupPrivatedb(DATABASE_NAME, Arguments.privatedbPath, Arguments.privatedbFasta) # 
+		
+		tempdbReportoryName = str(uuid.uuid4()) + "/"
+
+		DB_REPERTORY_PATH = DIR + tempdbReportoryName
+
+		setupPrivatedb(Arguments.privatedbFasta, DB_REPERTORY_PATH, DATABASE_NAME) #
 		
 	else : # si base de données par défaut
 		DATABASE_NAME = Arguments.defaultDatabase
 
+		abricateLoc = os.popen("which abricate").readlines()[0].replace("\n","")
+
+		DB_REPERTORY_PATH = "/".join(abricateLoc.split("/")[0:-2]) + "/db/"
+
 
 	beginAbricate = time.time()
 
-	runABRicate(dicoGenomes, DATABASE_NAME, Arguments.mincov, Arguments.minid, analysisDirectory, Arguments.nbThreads) # lance Abricate pour tous les génomes
+	runABRicate(dicoGenomes, DATABASE_NAME, Arguments.mincov, Arguments.minid, analysisDirectory, Arguments.nbThreads, DB_REPERTORY_PATH) # lance Abricate pour tous les génomes
 
 	endAbricate = time.time()
 
 	getABRicateFilesList(DIR, dicoGenomes, Arguments.outputFile) # création du fichier avec les chemins des fichiers résultats et les IDs des génomes 
 	
 	if Arguments.privateDatabase is not None : # si base de données privée
-		uninstall_private_db(Arguments.privateDatabase, Arguments.privatedbPath)
-
+		uninstall_private_db(DB_REPERTORY_PATH)
+		
 	end = time.time()
 	abricateTime = endAbricate - beginAbricate
 
 	print("\n")
-	print("Temps d'exécution d'ABRicate par souche : " + str(round(abricateTime/len(dicoGenomes),3)))
-	print ("Temps d'exécution de l'analyse ABRicate : " + str(round(end - begin,3)) + " secondes")
+	print("ABRicate total execution time by strain : " + str(round(abricateTime/len(dicoGenomes),3)))
+	print ("ABRicate analysis execution time : " + str(round(end - begin,3)) + " seconds")
 
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
