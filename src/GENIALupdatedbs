@@ -115,7 +115,7 @@ def getVfdbSequences(resdir, dicoSequences) :
 				break
 
 			else :
-				print("\n" + newHeader + "est en double")
+				print("\n" + newHeader + " is duplicate")
 
 	os.system("rm " + vfdbFastaName)
 
@@ -167,7 +167,7 @@ def getResfinderSequences(resdir, dicoSequences) :
 					break
 
 				else :
-					print("\n" + newHeader + " est en double")
+					print("\n" + newHeader + " is duplicate")
 
 					
 	os.system("rm -R " + resdir + "genomicepidemiology-resfinder_db-d3d7a6ceaa49/")
@@ -245,6 +245,8 @@ def main():
 		getResfinderSequences(RESDIR, dicoSequences)
 		writeFinalFasta(dicoSequences, RESDIR)
 		setupdb(DATABASE, Arguments.dbPath, RESDIR + "sequences")
+
+	os.system("rm -R " + RESDIR)
 
 
 # lancer la fonction main()  au lancement du script
