@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GENIAL",
-    version="1.0.5",
+    version="1.0.6",
     author="Pauline Barbet, Arnaud Felten",
     author_email="pauline.barbet@anses.fr, arnaud.felten@anses.fr",
     description="GENIAL: GENes Indentification with Abricate for Lucky biologists",
@@ -26,6 +26,8 @@ setuptools.setup(
              "src/GENIALmultidb",
              "src/GENIALupdatedbs",
              "src/GENIALsetupdbs",
+             "src/GENIAL_slurm.sh",
+             "src/GENIALslurm",
              ],
 	data_files = [('GENIALfiles/dbs/enterotox_staph',['dbs/enterotox_staph/sequences']), ('GENIALfiles/dbs/resfinder',['dbs/resfinder/sequences']), ('GENIALfiles/dbs/vfdb',['dbs/vfdb/sequences']), ('GENIALfiles/dbs/phages',['dbs/phages/sequences']), ('GENIALfiles/',['dbs/vfdb/VFs.tsv'])],
     include_package_data=True,
