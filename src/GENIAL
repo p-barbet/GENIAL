@@ -46,6 +46,10 @@ def get_parser() :
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
 
+	parser.add_argument("--mob_recon", action="store_true", dest="plasmids",
+                                        default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
+
+
 	return parser
 
 
@@ -64,10 +68,10 @@ def main():
 	Arguments=parser.parse_args()
 
 	if Arguments.privateDatabase is not None and (Arguments.privatedbFasta is None) :
-		 parser.error("-privatedb argument requires -dbp and -dbf.")
+		 parser.error("-privatedb argument requires -dbf.")
 
 	if Arguments.defaultDatabase is not None and (Arguments.privatedbFasta is not None) :
-		 parser.error("-defaultdb argument not requires -dbp and -dbf.")
+		 parser.error("-defaultdb argument not requires -dbf.")
 
 	begin = time.time()
 
@@ -80,7 +84,13 @@ def main():
 
 	if Arguments.defaultDatabase is not None :
 
-		os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " -defaultdb " + Arguments.defaultDatabase + " -r " + Arguments.resdir + " -minid " + Arguments.minid + " -mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+		if Arguments.plasmids is None :
+
+			os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " -defaultdb " + Arguments.defaultDatabase + " -r " + Arguments.resdir + " -minid " + Arguments.minid + " -mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+		
+		else :
+
+			os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " -defaultdb " + Arguments.defaultDatabase + " -r " + Arguments.resdir + " -minid " + Arguments.minid + " -mincov " + Arguments.mincov + " -w " + Arguments.workdir + " --mob_recon")
 
 		if os.path.isfile(Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv") :  # vérifie que le fichier abricate_files.tsv existe
 			if Arguments.remove :
@@ -90,9 +100,14 @@ def main():
 				os.system("GENIALresults -f " + Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv -w " + Arguments.workdir + " -r " + Arguments.resdir + " -defaultdb " + Arguments.defaultDatabase)
 
 
-	elif Arguments.privateDatabase is not None :
+	else :
+		if Arguments.plasmids is None :
 
-		os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " -privatedb " + Arguments.privateDatabase + " -dbf " + Arguments.privatedbFasta + " -r " + Arguments.resdir + " -minid " + Arguments.minid + " -mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+			os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " -privatedb " + Arguments.privateDatabase + " -dbf " + Arguments.privatedbFasta + " -r " + Arguments.resdir + " -minid " + Arguments.minid + " -mincov " + Arguments.mincov + " -w " + Arguments.workdir)
+
+		else :
+
+			os.system("GENIALanalysis -f " +  Arguments.input + " -T " + Arguments.nbThreads + " -privatedb " + Arguments.privateDatabase + " -dbf " + Arguments.privatedbFasta + " -r " + Arguments.resdir + " -minid " + Arguments.minid + " -mincov " + Arguments.mincov + " -w " + Arguments.workdir + " --mob_recon")
 
 		if os.path.isfile(Arguments.workdir + Arguments.resdir + "ABRicate_files.tsv") : # Vérifie que le fichier abricate_files.tsv existe
 			if Arguments.remove :
