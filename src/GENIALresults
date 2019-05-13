@@ -91,7 +91,8 @@ class genome(object) :
 			if geneName not in dicoGenes : # si le nom du gène n'est pas dans le dictionnaire des gènes création de l'objet gène correspondant
 				dicoGenes[geneName] = gene()
 
-				productInfos = self.abricateMatrix.set_index("GENE")["PRODUCT"][geneName] # récupération des informations dans la colonne produit du gène
+				productInfos = self.abricateMatrix[["GENE","PRODUCT"]].set_index("GENE").drop_duplicates()["PRODUCT"][geneName] # récupération des informations dans la colonne produit du gène
+
 
 				dicoGenes[geneName].setName(geneName)
 				dicoGenes[geneName].setDatabase(database)
