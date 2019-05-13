@@ -38,6 +38,7 @@ def get_parser() :
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
 
+
 	return parser
 
 
@@ -359,7 +360,7 @@ def getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	speciesNames = [] # nom des espèces
 	number = [] # effectifs des gènes
 
-	corTable = pd.DataFrame(columns = ["Genes", "Species", "VF names", "Families names", "Number"]) # dataframe vide avec 5 colonnes
+	corTable = pd.DataFrame(columns = ["Genes", "Species", "VF names", "VF families", "Number"]) # dataframe vide avec 5 colonnes
 
 	genesList = matrixAllGenes.columns # gènes
 
@@ -384,7 +385,7 @@ def getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	corTable["Genes"] = genes 
 	corTable["Species"] = speciesNames 
 	corTable["VF names"] = vfNames 
-	corTable["Family names"] = vfFamilies 
+	corTable["VF families"] = vfFamilies 
 	corTable["Number"] = number 
 
 	return corTable
@@ -397,7 +398,7 @@ def getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	antibioticFamilies = [] # familles d'natibiotiques
 	number = [] # effecyifs des gènes
 
-	corTable = pd.DataFrame(columns = ["Genes", "Antibiotic resistance", "Number"]) # dataframe vide avec 3 colonnes
+	corTable = pd.DataFrame(columns = ["Genes", "Antibiotic families", "Number"]) # dataframe vide avec 3 colonnes
 
 	genesList = matrixAllGenes.columns # gènes
 
@@ -415,7 +416,7 @@ def getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) :
 
 	# remplissage des colonnes
 	corTable["Genes"] = genes 
-	corTable["Antibiotic resistance"] = antibioticFamilies 
+	corTable["Antibiotic families"] = antibioticFamilies 
 	corTable["Number"] = number 
 
 	return corTable
@@ -563,6 +564,7 @@ def main():
 			genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		elif Arguments.defaultDatabase == "vfdb" : 
+
 			genialFilesPath = "/".join(os.popen("which GENIAL").readlines()[0].replace("\n","").split("/")[0:-2]) + "/GENIALfiles/" # GENIAL files path
 			dicoVfFamilies = getVfFamiliesDico(genialFilesPath + "VFs.tsv") # construction du dictionnaire des familles de VF
 			getGenomesObjects(Arguments.abricateList, dicoGenomes, Arguments.defaultDatabase, dicoGenes, dicoVfFamilies) # construction des objets génomes
@@ -590,7 +592,7 @@ def main():
 		matrixAllGenes = getMatrixAllGenes(dicoGenomes, dicoGenes, Arguments.defaultDatabase, WORKDIR, RESDIR) # construction de la matrice avec tous les gènes
 		corTable = getCorrespondanceTable(matrixAllGenes, dicoGenes) # construction de la table de correspondance
 
-	writeMatrix(matrixAllGenes, "matrixAllGenes.tsv", DIR_MATRIX, True) # ecriture de la matrice pour tous les gènes
+	writeMatrix(matrixAllGenes, "matrix_all_genes.tsv", DIR_MATRIX, True) # ecriture de la matrice pour tous les gènes
 	writeMatrix(corTable, "correspondance_table.tsv", DIR_MATRIX, False) # ecriture la table de correspondance
 
 	allGenesHeatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes), len(dicoGenes)) # construction de la heatmap pour tous les gènes
