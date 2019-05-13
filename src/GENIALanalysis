@@ -50,6 +50,10 @@ def get_parser() :
 	parser.add_argument("--mob_recon", action="store_true", dest="plasmids",
                                         default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
 
+	parser.add_argument("--no_GENIALresult_file", action="no_GENIALresult_file", dest="plasmids",
+                                        default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
+
+
 	return parser
 
 # Objet génome (atributs : ID, fichier fasta, fichier abricate)
@@ -296,7 +300,9 @@ def main():
 
 	endAbricate = time.time()
 
-	getABRicateFilesList(WORKDIR + RESDIR, dicoGenomes, Arguments.outputFile) # création du fichier avec les chemins des fichiers résultats et les IDs des génomes 
+	if not Arguments.no_GENIALresult_file :
+		getABRicateFilesList(WORKDIR + RESDIR, dicoGenomes, Arguments.outputFile) # création du fichier avec les chemins des fichiers résultats et les IDs des génomes 
+
 	
 	if Arguments.privateDatabase is not None : # si base de données privée
 		uninstall_private_db(DB_REPERTORY_PATH)
