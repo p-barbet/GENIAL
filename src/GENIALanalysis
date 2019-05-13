@@ -257,7 +257,6 @@ def main():
 		if not os.path.exists(WORKDIR + RESDIR + "Mob_recon_results/") :
 			os.system("mkdir " + WORKDIR + RESDIR + "Mob_recon_results/")
 
-	DIR = WORKDIR + RESDIR
 	analysisDirectory = WORKDIR + RESDIR + "Analysis_files/"
 	mobDirectory = WORKDIR + RESDIR + "Mob_recon_results/"
 
@@ -272,7 +271,7 @@ def main():
 
 		tempdbReportoryName = str(uuid.uuid4()) + "/"
 
-		DB_REPERTORY_PATH = DIR + tempdbReportoryName
+		DB_REPERTORY_PATH = WORKDIR + RESDIR + tempdbReportoryName
 
 		setupPrivatedb(Arguments.privatedbFasta, DB_REPERTORY_PATH, DATABASE_NAME) # 
 		
@@ -297,7 +296,7 @@ def main():
 
 	endAbricate = time.time()
 
-	getABRicateFilesList(DIR, dicoGenomes, Arguments.outputFile) # création du fichier avec les chemins des fichiers résultats et les IDs des génomes 
+	getABRicateFilesList(WORKDIR + RESDIR, dicoGenomes, Arguments.outputFile) # création du fichier avec les chemins des fichiers résultats et les IDs des génomes 
 	
 	if Arguments.privateDatabase is not None : # si base de données privée
 		uninstall_private_db(DB_REPERTORY_PATH)
