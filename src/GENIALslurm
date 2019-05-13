@@ -23,7 +23,7 @@ def get_parser() :
 		
 	parser.add_argument("-T", action="store", dest="nbThreads", type=str, default=1, help="number of theard to use")
 
-	parser.add_argument("-strainid", action="store", dest="strainid", type=str, default="", help="strain ID")
+	parser.add_argument("-strainid", action="store", dest="strainid", type=str, , default="", help="strain ID")
 
 	parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="strain ID")
 
@@ -52,7 +52,7 @@ class genome(object) :
 
 
 def getAllGenomesObjects(dicoGenomes, ID = None) :
-	uri = 'mongodb://localhost:27017/'
+	uri = "mongodb://Manager:reganaM@localhost/GAMeRdb"
 	client = MongoClient(uri)
 
 	db = client.GAMeRdb
@@ -74,7 +74,7 @@ def getAllGenomesObjects(dicoGenomes, ID = None) :
 		infos = genomes.find()	
 	
 	else : 
-		infos = genomes.find({"SampleID":ID})
+		infos = find({SampleID:ID})
 		
 	for info in infos :
 		genesCollection = genomes.find({"SampleID":info['SampleID']},{"Genes":1,"_id":0})
@@ -130,11 +130,15 @@ def genialSlurm(sbatchName, genialCmd, dependencies="", condaEnv = "genial_db", 
 		
 
 
-def runGENIAL(dicoGenomes, nas, nbThreads, workdir) :
+def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir) :
+
+	if not os.path.exists(workdir + resdir) : # création du répertoire de toutes les souches
+			os.system("mkdir " + workdir + resdir)
+
 	
 	for genome in dicoGenomes : # pour chaque génome
 		
-		genomeDir = workdir + "GENIALslurm_" + dicoGenomes[genome].ID + "/" # nom du répertoire de la souche
+		genomeDir = workdir + resdir + "GENIALslurm_" + dicoGenomes[genome].ID + "/" # nom du répertoire de la souche
 
 		if not os.path.exists(genomeDir) : # création du répertoire de la souche
 			os.system("mkdir " + genomeDir) 
@@ -144,14 +148,14 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir) :
 			
 		sbatchFiles = [] # liste des fichier sbatch (1 part base de donnés)
 
-		resfinderCmd = "GENIALanalysis -f " + inputFile + " -defaultdb resfinder -T " + nbThreads + " -w " + genomeDir + " -r resfinder" # commande resfinder
+		resfinderCmd = "GENIALanalysis -f " + inputFile + " -defaultdb resfinder -T " + nbThreads + " -w " + genomeDir + " -r resfinder --no_GENIALresult_file" # commande resfinder
 		sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_resfinder.sh") # ajout du fichier à la liste des sbatch
 
-		vfdbCmd = "GENIALanalysis -f " + inputFile + " -defaultdb vfdb -T " + nbThreads + " -w " + genomeDir + " -r vfdb" # commande vfdb
+		vfdbCmd = "GENIALanalysis -f " + inputFile + " -defaultdb vfdb -T " + nbThreads + " -w " + genomeDir + " -r vfdb --no_GENIALresult_file" # commande vfdb
 		sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_vfdb.sh") # ajout du fichier à la liste des sbatch
 		
 		if dicoGenomes[genome].genre == "Salmonella" :
-			entorotoxCmd = "GENIALanalysis -f " + inputFile + " -defaultdb enterotox_staph -T " + nbThreads + " -w " + genomeDir + " -r enterotox_staph" # commande enterotox_staph
+			entorotoxCmd = "GENIALanalysis -f " + inputFile + " -defaultdb enterotox_staph -T " + nbThreads + " -w " + genomeDir + " -r enterotox_staph --no_GENIALresult_file" # commande enterotox_staph
 			sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_enterotox.sh") # ajout du fichier à la liste des sbatch
 		
 		jobIds = [] # id des jobs slurm
@@ -162,19 +166,20 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir) :
 		if dicoGenomes[genome].genre == "Salmonella" :
 			jobIds.append(genialSlurm(sbatchFiles[2], enterotoxCmd, nbThreads = nbThreads)) # ajout id du job enterotox_staph
 
-		genialSlurm("empty", "echo Finish", depedencies = "--dependency:afterok:" + ":".join(jobIds), sync = 1) # job vide
+		genialSlurm("empty", "echo Finish", depedencies = "--dependency:afterok:" + ":".join(jobIds), sync = 1) # job vide pour que le programme attende la fin des jobs
 		os.system("rm " + inputFile)  # suppression du fichier d'entrée de GENIAL
 		
 		for sbatchFile in sbatchFiles : # suppression des fichie sbach de chaque base de données
 			os.system("rm " + sbatchFile) 
 
 
-		
-		
-		
-		# déplacer le fichier arbicate dans le nas
-		# supprimer le dossier Analysis_files/?
-		# suprimer les fichiers d'entrée (GENIALanalysis, GENIALresults)?
+		os.system("mv " + genomeDir + "GENIAL_" + dicoGenomes[genome].ID + "_" + resfinder " " + nas + "GAMeRdb/" + dicoGenomes[genome].genre + "/" +  dicoGenomes[genome].ID + "/" # déplacer le fichier arbicate dans le nas
+		os.system("mv " + genomeDir + "GENIAL_" + dicoGenomes[genome].ID + "_" + vfdb " " + nas + "GAMeRdb/" + dicoGenomes[genome].genre + "/" +  dicoGenomes[genome].ID + "/" # déplacer le fichier arbicate dans le nas
+		os.system("mv " + genomeDir + "GENIAL_" + dicoGenomes[genome].ID + "_" + enterotox_staph " " + nas + "GAMeRdb/" + dicoGenomes[genome].genre + "/" +  dicoGenomes[genome].ID + "/" # déplacer le fichier arbicate dans le nas
+
+
+	os.system("rm -r " + workdir + resdir) # Suppression du dossier avec le résultat de toute sles souches
+
 
 
 def main():
@@ -192,7 +197,7 @@ def main():
 	Arguments=parser.parse_args()
 
 	WORKDIR = Arguments.workdir
-	#RESDIR = Arguments.resdir
+	RESDIR = "GENIALslurm_results/"
 	#DIR = WORKDIR + RESDIR 
 
 	dicoGenomes = {}
@@ -217,7 +222,7 @@ def main():
 	if Arguments.strainid is "" :
 
 		
-		#GENIALslurm(dicoGenomes)
+		#getAllGenomesObjects(dicoGenomes)
 		dicoGenomes["XSD0471"] = genome()
 		dicoGenomes["XSD0471"].setID("XSD0471")
 		dicoGenomes["XSD0471"].setFastaFile(Arguments.nas + "data/GAMeR_DB/SALMONELLA/XSD0471/XSD0471_contigs.fasta")
@@ -225,13 +230,13 @@ def main():
 
 
 	else : 
-		getGenomesObjects(dicoGenomes, ID = Arguments.strainid)
+		getAllGenomesObjects(dicoGenomes, ID = Arguments.strainid)
 		
 
 				
 
 
-	runGENIAL(dicoGenomes, Arguments.nas, Arguments.nbThreads, WORKDIR)
+	runGENIAL(dicoGenomes, Arguments.nas, Arguments.nbThreads, WORKDIR, RESDIR)
 
 
 		
