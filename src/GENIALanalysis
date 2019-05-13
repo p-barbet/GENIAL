@@ -122,7 +122,7 @@ def runABRicate(dicoGenomes, dbName, mincov, minid, analysisDirectory, nbThreads
 
 	for genome in dicoGenomes :
 
-		abricateResult = analysisDirectory + "ABRicate_" + dicoGenomes[genome].ID + "_" + dbName + ".tsv" # nom du fichier résultat de l'analyse
+		abricateResult = analysisDirectory + "GENIAL_" + dicoGenomes[genome].ID + "_" + dbName + ".tsv" # nom du fichier résultat de l'analyse
 		os.system("abricate " + dicoGenomes[genome].fastaFile + " --db " + dbName + " -mincov " + mincov + " -minid " + minid + " --threads " + str(nbThreads) + " --datadir " + dbRepertoryPath + " > " + abricateResult) # lancement d'ABRicate
 
 
