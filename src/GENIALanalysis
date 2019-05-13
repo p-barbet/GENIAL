@@ -189,7 +189,7 @@ def formateAbricateFile(dicoGenomes, mobrecon = False) :
 		abricateDfResult.index.name = "#GENOME" # nom de l'index
 
 
-abricateDfResult.to_csv(dicoGenomes[genome].abricateFile, sep="\t") # récriture du fichier
+	abricateDfResult.to_csv(dicoGenomes[genome].abricateFile, sep="\t") # récriture du fichier
 
 
 
