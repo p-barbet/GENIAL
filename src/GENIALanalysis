@@ -253,13 +253,13 @@ def main():
 	if not os.path.exists(WORKDIR + RESDIR) :
 		os.system("mkdir " + WORKDIR + RESDIR) 
 		os.system("mkdir " + WORKDIR + RESDIR + "Analysis_files/")
-		os.system("mkdir " + WORKDIR + RESDIR + "Mob_recon_results/")
+		#os.system("mkdir " + WORKDIR + RESDIR + "Mob_recon_results/")
 
 	else :
 		if not os.path.exists(WORKDIR + RESDIR + "Analysis_files/") :
 			os.system("mkdir " + WORKDIR + RESDIR + "Analysis_files/")
-		if not os.path.exists(WORKDIR + RESDIR + "Mob_recon_results/") :
-			os.system("mkdir " + WORKDIR + RESDIR + "Mob_recon_results/")
+		#if not os.path.exists(WORKDIR + RESDIR + "Mob_recon_results/") :
+		#	os.system("mkdir " + WORKDIR + RESDIR + "Mob_recon_results/")
 
 	analysisDirectory = WORKDIR + RESDIR + "Analysis_files/"
 	mobDirectory = WORKDIR + RESDIR + "Mob_recon_results/"
