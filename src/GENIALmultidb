@@ -21,7 +21,7 @@ def get_parser() :
 					type=str, required=True, help="tsv file with FASTA files paths and strains IDs (REQUIRED)")
 
 	parser.add_argument("-db", action="store", dest="databases", \
-					type=str, required=True, nargs="+", choices=["resfinder", "vfdb", "enterotox_staph", "phages"], help="default \
+					type=str, required=True, nargs="+", choices=["resfinder", "vfdb", "enterotox_staph", "phages", "spi"], help="default \
 						database list (resfinder, vfdb, enterotox_staph, phages)")
 
 	parser.add_argument("-T", action="store", dest="nbThreads", 
