@@ -169,7 +169,7 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir) :
 		genialSlurm("empty", "echo Finish", depedencies = "--dependency:afterok:" + ":".join(jobIds), sync = 1) # job vide pour que le programme attende la fin des jobs
 		os.system("rm " + inputFile)  # suppression du fichier d'entrée de GENIAL
 		
-		for sbatchFile in sbatchFiles : # suppression des fichie sbach de chaque base de données
+		for sbatchFile in sbatchFiles : # suppression des fichiers sbach de chaque base de données
 			os.system("rm " + sbatchFile) 
 
 
@@ -231,10 +231,7 @@ def main():
 
 	else : 
 		getAllGenomesObjects(dicoGenomes, ID = Arguments.strainid)
-		
-
-				
-
+	
 
 	runGENIAL(dicoGenomes, Arguments.nas, Arguments.nbThreads, WORKDIR, RESDIR)
 
