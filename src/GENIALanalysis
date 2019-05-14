@@ -50,7 +50,7 @@ def get_parser() :
 	parser.add_argument("--mob_recon", action="store_true", dest="plasmids",
                                         default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
 
-	parser.add_argument("--no_GENIALresult_file", action="no_GENIALresult_file", dest="plasmids",
+	parser.add_argument("--no_GENIALresult_file", action="store_true", dest="no_GENIALresult_file",
                                         default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
 
 
