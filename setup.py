@@ -35,6 +35,7 @@ setuptools.setup(
                       'seaborn',
                       'biopython',
                       'xlrd',
+                      'pymongo',
                       ], 
     dependency_links=['https://github.com/tseemann/abricate'], 
     zip_safe=False,
