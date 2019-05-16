@@ -33,9 +33,10 @@ def get_parser() :
 
 	parser.add_argument("-strainid", action="store", dest="strainid", type=str, nargs='+', default="", help="strains'ID ")
 
-	parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="overwrite infos in the database")
+	#parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="overwrite infos in the database")
 
-	parser.add_argument("--nowritedb", action="store_true", dest="nowritedb", default=True, help="don't write infos in the database")
+	parser.add_argument("--new_analysis", action="store_true", dest="newAnalysis", default=False, \
+		help="update informations throwing again the analysis for all strains (incompatible with -strainid)")
 	
 
 	return parser
@@ -59,23 +60,12 @@ class genome(object) :
 		self.genre = genre
 
 
-def getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas,ID = None) :
+def getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas, ID = None, newAnalysis = False) :
 	uri = "mongodb://" + MongoUser + ":" + MongoPassword + "@sas-vp-lsdb1/GAMeRdb"
 	client = MongoClient(uri)
 
 	db = client.GAMeRdb
 	genomes = db.GENOME
-
-	
-	#for genre in glob.glob("/global/bio/data/GAMeR_DB/*") :
-	#	print(genre.split('/')[-1])
-
-	#idsPath = glob.glob("/global/bio/data/GAMeR_DB/*/*")
-	#IDs = []		
-
-	#for path in idsPaths :
-	#ID = path.split('/')[-1]
-	#IDs.append(ID)
 
 
 	if ID is None : 
@@ -84,16 +74,25 @@ def getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas,ID = None) :
 	
 	else : 
 		infos = genomes.find({"SampleID":ID})
-		
-	for info in infos :
-		genesCollection = genomes.find({"SampleID":info['SampleID']},{"Gene":1,"_id":0})
+	
 
-		for element in genesCollection :
-			if element == {} :
-				dicoGenomes[info['SampleID']] = genome()
-				dicoGenomes[info['SampleID']].setID(info['SampleID'])
-				dicoGenomes[info['SampleID']].setFastaFile(info['Genome']['Assembly'].replace('DATA',nas + 'data'))
-				dicoGenomes[info['SampleID']].setGenre(info['Phylogeny']['Genus'])
+	for info in infos :
+
+		if not newAnalysis :
+			genesCollection = genomes.find({"SampleID":info['SampleID']},{"Gene":1,"_id":0})
+
+			for element in genesCollection :
+				if element == {} :
+					dicoGenomes[info['SampleID']] = genome()
+					dicoGenomes[info['SampleID']].setID(info['SampleID'])
+					dicoGenomes[info['SampleID']].setFastaFile(info['Genome']['Assembly'].replace('DATA',nas + 'data'))
+					dicoGenomes[info['SampleID']].setGenre(info['Phylogeny']['Genus'])
+
+		else :
+			dicoGenomes[info['SampleID']] = genome()
+			dicoGenomes[info['SampleID']].setID(info['SampleID'])
+			dicoGenomes[info['SampleID']].setFastaFile(info['Genome']['Assembly'].replace('DATA',nas + 'data'))
+			dicoGenomes[info['SampleID']].setGenre(info['Phylogeny']['Genus'])
 
 
 
@@ -308,6 +307,10 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
+	if Arguments.newAnalysis and (Arguments.strainid is not None) : # Vérification que les arguments -dbp et-dbf sont bien présents si la base de donées choisie est privée
+		 parser.error("-strainid is incomatible with --new_analysis")
+
+
 	WORKDIR = Arguments.workdir
 	RESDIR = "GENIALslurm_results/"
 	#DIR = WORKDIR + RESDIR 
@@ -317,45 +320,35 @@ def main():
 	if Arguments.nas[-1] != "/" :
 		Arguments.nas += "/"
 
-	
-
 	if WORKDIR[-1] != "/" :
 		WORKDIR += "/"
 
-	#if RESDIR[-1] != "/" : 
-	#	RESDIR += "/"
+	if Arguments.newAnalysis :
+		getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas, newAnalysis = True)
 
+	else :
+		if Arguments.strainid is "" :
+			getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas)
+			'''
+			dicoGenomes["XSD0471"] = genome()
+			dicoGenomes["XSD0471"].setID("XSD0471")
+			dicoGenomes["XSD0471"].setFastaFile(Arguments.nas + "data/GAMeR_DB/SALMONELLA/XSD0471/XSD0471_contigs.fasta")
+			dicoGenomes["XSD0471"].setGenre("Salmonella")
+			'''
 
-	#if not os.path.exists(DIR) :
-	#	os.system("mkdir " + DIR) 
-
-
-
-	if Arguments.strainid is "" :
-
-		
-		getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas )
-		'''
-		dicoGenomes["XSD0471"] = genome()
-		dicoGenomes["XSD0471"].setID("XSD0471")
-		dicoGenomes["XSD0471"].setFastaFile(Arguments.nas + "data/GAMeR_DB/SALMONELLA/XSD0471/XSD0471_contigs.fasta")
-		dicoGenomes["XSD0471"].setGenre("Salmonella")
-		'''
-
-
-	else : 
+		else : 
+			for strain in Arguments.strainid :
+				getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas , ID = strain)
+			'''
+			print(dicoGenomes.keys())
+			print(dicoGenomes[Arguments.strainid].ID)
+			print(dicoGenomes[Arguments.strainid].fastaFile)
+			print(dicoGenomes[Arguments.strainid].genre)
+			'''
 	
-		for strain in Arguments.strainid :
-			getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas , ID = strain)
-		'''
-		print(dicoGenomes.keys())
-		print(dicoGenomes[Arguments.strainid].ID)
-		print(dicoGenomes[Arguments.strainid].fastaFile)
-		print(dicoGenomes[Arguments.strainid].genre)
-		'''
-	
-	if len(dicoGenomes.keys()) == 0 :
-		exit()
+			if len(dicoGenomes.keys()) == 0 :
+				exit()
+
 	runGENIAL(dicoGenomes, Arguments.nas, Arguments.nbThreads, WORKDIR, RESDIR, Arguments.MongoUser, Arguments.MongoPassword)
 
 
