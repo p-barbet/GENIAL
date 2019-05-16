@@ -33,9 +33,10 @@ def get_parser() :
 
 	parser.add_argument("-strainid", action="store", dest="strainid", type=str, nargs='+', default="", help="strains'ID ")
 
-	parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="XXXX")
+	#parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="overwrite infos in the database")
 
-	parser.add_argument("--nowritedb", action="store_true", dest="nowritedb", default=True, help="don't write infos in the database")
+	parser.add_argument("--new_analysis", action="store_true", dest="newAnalysis", default=False, \
+		help="update informations throwing again the analysis for all strains (incompatible with -strainid)")
 	
 
 	return parser
@@ -59,23 +60,12 @@ class genome(object) :
 		self.genre = genre
 
 
-def getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas,ID = None) :
+def getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas, ID = None, newAnalysis = False) :
 	uri = "mongodb://" + MongoUser + ":" + MongoPassword + "@sas-vp-lsdb1/GAMeRdb"
 	client = MongoClient(uri)
 
 	db = client.GAMeRdb
 	genomes = db.GENOME
-
-	
-	#for genre in glob.glob("/global/bio/data/GAMeR_DB/*") :
-	#	print(genre.split('/')[-1])
-
-	#idsPath = glob.glob("/global/bio/data/GAMeR_DB/*/*")
-	#IDs = []		
-
-	#for path in idsPaths :
-	#ID = path.split('/')[-1]
-	#IDs.append(ID)
 
 
 	if ID is None : 
@@ -84,16 +74,25 @@ def getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas,ID = None) :
 	
 	else : 
 		infos = genomes.find({"SampleID":ID})
-		
-	for info in infos :
-		genesCollection = genomes.find({"SampleID":info['SampleID']},{"Gene":1,"_id":0})
+	
 
-		for element in genesCollection :
-			if element == {} :
-				dicoGenomes[info['SampleID']] = genome()
-				dicoGenomes[info['SampleID']].setID(info['SampleID'])
-				dicoGenomes[info['SampleID']].setFastaFile(info['Genome']['Assembly'].replace('DATA',nas + 'data'))
-				dicoGenomes[info['SampleID']].setGenre(info['Phylogeny']['Genus'])
+	for info in infos :
+
+		if not newAnalysis :
+			genesCollection = genomes.find({"SampleID":info['SampleID']},{"Gene":1,"_id":0})
+
+			for element in genesCollection :
+				if element == {} :
+					dicoGenomes[info['SampleID']] = genome()
+					dicoGenomes[info['SampleID']].setID(info['SampleID'])
+					dicoGenomes[info['SampleID']].setFastaFile(info['Genome']['Assembly'].replace('DATA',nas + 'data'))
+					dicoGenomes[info['SampleID']].setGenre(info['Phylogeny']['Genus'])
+
+		else :
+			dicoGenomes[info['SampleID']] = genome()
+			dicoGenomes[info['SampleID']].setID(info['SampleID'])
+			dicoGenomes[info['SampleID']].setFastaFile(info['Genome']['Assembly'].replace('DATA',nas + 'data'))
+			dicoGenomes[info['SampleID']].setGenre(info['Phylogeny']['Genus'])
 
 
 
@@ -112,30 +111,25 @@ def makeGenialInputFile(fastaPath, ID, genomeDir) :
 '''
 def genialSlurm(sbatchName, genialCmd, dependencies="", condaEnv = "genial_db", nbThreads = 1, sync = 0) :
 	sbatchFile = open(sbatchName, "w")
-
 	sbatchFile.write("#!/bin/bash\n")
 	sbatchFile.write("#SBATCH -J " + os.path.splitext(os.path.basename(sbatchName))[0] + "\n")
-
 	if sync != 0 :
 		sbatchFile.write("#SBATCH -W\n")
-
 	sbatchFile.write("#SBATCH --cpus-per-task=" + str(nbThreads) + "\n")
 	sbatchFile.write("#SBATCH -o %x.%N.%j.out" + "\n")
 	sbatchFile.write("#SBATCH -e %x.%N.%j.err" + "\n")
 	sbatchFile.write("#SBATCH -p Research\n")
-
 	sbatchFile.write("source /global/conda/bin/activate\n")
 	sbatchFile.write("conda activate\n")
 	sbatchFile.write("conda activate " + condaEnv + "\n\n")
-
 	sbatchFile.write(str(genialCmd) + "\n")
-
 	sbatchFile.close()
-
 	slurm_cmd=["sbatch " , dependencies ,  ' ' + sbatchName]
 	print(slurm_cmd)
 	return(re.findall(r'\d+',subprocess.check_output("".join(slurm_cmd), shell=True))[0])
 '''
+
+
 def genialSlurm(name,cmd,dependencies="",conda_env="genial_db",nbThreads=1,sync=0,mem=0 ):
 
 	sbash_file = name.replace('./','')
@@ -212,6 +206,14 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 			nbThreads + " -w " + genomeDir + " -r enterotox_staph --no_GENIALresult_file" 
 			# ajout du fichier à la liste des sbatch
 			sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_enterotox.sh") 
+
+
+		if dicoGenomes[genome].genre == "Salmonella" :
+			# commande enterotox_staph
+			spiCmd = "GENIALanalysis -f " + inputFile + " -defaultdb spi -T " + \
+			nbThreads + " -w " + genomeDir + " -r spi --no_GENIALresult_file" 
+			# ajout du fichier à la liste des sbatch
+			sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_spi.sh") 
 		
 		# ajout id du job resfinder
 		jobIds.append(genialSlurm(sbatchFiles[0], resfinderCmd, nbThreads = nbThreads)) 
@@ -221,6 +223,10 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 		if dicoGenomes[genome].genre == "Staphylococcus" :
 			# ajout id du job enterotox_staph
 			jobIds.append(genialSlurm(sbatchFiles[2], enterotoxCmd, nbThreads = nbThreads)) 
+
+		if dicoGenomes[genome].genre == "Salmonella" :
+			# ajout id du job enterotox_staph
+			jobIds.append(genialSlurm(sbatchFiles[3], spiCmd, nbThreads = nbThreads)) 
 		
 	
 	# job vide pour que le programme attende la fin des jobs
@@ -254,6 +260,14 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 			new_enterotox_file = "DATA/GAMeR_DB/" + dicoGenomes[genome].genre.upper() + '/' + dicoGenomes[genome].ID + \
 			"/ABRicate/" +  "GENIAL_" + dicoGenomes[genome].ID + "_enterotox_staph.tsv"
 			insertMongo(MongoUser, MongoPwd, "enterotox_staph", new_enterotox_file,  dicoGenomes[genome].ID)
+
+		if dicoGenomes[genome].genre == "Salmonella" :
+			spi_file = genial_output_dir + "spi/Analysis_files/" + \
+			"GENIAL_" + dicoGenomes[genome].ID + "_spi.tsv"
+			os.system("mv " + spi_file + ' ' + finaldir)
+			new_spi_file = "DATA/GAMeR_DB/" + dicoGenomes[genome].genre.upper() + '/' + dicoGenomes[genome].ID + \
+			"/ABRicate/" +  "GENIAL_" + dicoGenomes[genome].ID + "_spi.tsv"
+			insertMongo(MongoUser, MongoPwd, "spi", new_spi_file,  dicoGenomes[genome].ID)
 		
 
 	# Suppression du dossier avec le résultat de toute sles souches
@@ -271,8 +285,6 @@ def insertMongo(MongoUser, MongoPwd, db_name, gene_file, strainid):
 	genomes.update({"SampleID":strainid}, {'$set':{'Gene.'+db_name:gene_file}})
 	
 	
-	
-	
 
 def main():
 	
@@ -288,6 +300,10 @@ def main():
 	# mettre tout les arguments dans la variable Argument
 	Arguments=parser.parse_args()
 
+	if Arguments.newAnalysis and (Arguments.strainid is not None) : # Vérification que les arguments -dbp et-dbf sont bien présents si la base de donées choisie est privée
+		 parser.error("-strainid is incomatible with --new_analysis")
+
+
 	WORKDIR = Arguments.workdir
 	RESDIR = "GENIALslurm_results/"
 	#DIR = WORKDIR + RESDIR 
@@ -297,45 +313,35 @@ def main():
 	if Arguments.nas[-1] != "/" :
 		Arguments.nas += "/"
 
-	
-
 	if WORKDIR[-1] != "/" :
 		WORKDIR += "/"
 
-	#if RESDIR[-1] != "/" : 
-	#	RESDIR += "/"
+	if Arguments.newAnalysis :
+		getAllGenomesObjects(dicoGenomes, MongoUser, MongoPassword, nas, newAnalysis = True)
 
+	else :
+		if Arguments.strainid is "" :
+			getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas)
+			'''
+			dicoGenomes["XSD0471"] = genome()
+			dicoGenomes["XSD0471"].setID("XSD0471")
+			dicoGenomes["XSD0471"].setFastaFile(Arguments.nas + "data/GAMeR_DB/SALMONELLA/XSD0471/XSD0471_contigs.fasta")
+			dicoGenomes["XSD0471"].setGenre("Salmonella")
+			'''
 
-	#if not os.path.exists(DIR) :
-	#	os.system("mkdir " + DIR) 
-
-
-
-	if Arguments.strainid is "" :
-
-		
-		getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas )
-		'''
-		dicoGenomes["XSD0471"] = genome()
-		dicoGenomes["XSD0471"].setID("XSD0471")
-		dicoGenomes["XSD0471"].setFastaFile(Arguments.nas + "data/GAMeR_DB/SALMONELLA/XSD0471/XSD0471_contigs.fasta")
-		dicoGenomes["XSD0471"].setGenre("Salmonella")
-		'''
-
-
-	else : 
+		else : 
+			for strain in Arguments.strainid :
+				getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas , ID = strain)
+			'''
+			print(dicoGenomes.keys())
+			print(dicoGenomes[Arguments.strainid].ID)
+			print(dicoGenomes[Arguments.strainid].fastaFile)
+			print(dicoGenomes[Arguments.strainid].genre)
+			'''
 	
-		for strain in Arguments.strainid :
-			getAllGenomesObjects(dicoGenomes, Arguments.MongoUser, Arguments.MongoPassword, Arguments.nas , ID = strain)
-		'''
-		print(dicoGenomes.keys())
-		print(dicoGenomes[Arguments.strainid].ID)
-		print(dicoGenomes[Arguments.strainid].fastaFile)
-		print(dicoGenomes[Arguments.strainid].genre)
-		'''
-	
-	if len(dicoGenomes.keys()) == 0 :
-		exit()
+			if len(dicoGenomes.keys()) == 0 :
+				exit()
+
 	runGENIAL(dicoGenomes, Arguments.nas, Arguments.nbThreads, WORKDIR, RESDIR, Arguments.MongoUser, Arguments.MongoPassword)
 
 
@@ -343,4 +349,4 @@ def main():
 
 # lancer la fonction main()  au lancement du script
 if __name__ == "__main__":
-	main()	
+	main() 
