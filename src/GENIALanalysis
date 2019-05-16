@@ -51,7 +51,7 @@ def get_parser() :
                                         default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
 
 	parser.add_argument("--no_GENIALresult_file", action="store_true", dest="no_GENIALresult_file",
-                                        default=False, help="add scafolds location column in ABRicate results file (chromosome or plasmid)")
+                                        default=False, help="don't realise the input GENIALresult file")
 
 
 	return parser
