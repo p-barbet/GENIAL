@@ -38,6 +38,10 @@ def get_parser() :
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
 
+	parser.add_argument("--keep_input", action="store_true", dest="remove_input",
+                    default=False, help="don't remove input file")
+
+
 
 	return parser
 
@@ -91,7 +95,7 @@ class genome(object) :
 			if geneName not in dicoGenes : # si le nom du gène n'est pas dans le dictionnaire des gènes création de l'objet gène correspondant
 				dicoGenes[geneName] = gene()
 
-				productInfos = self.abricateMatrix[["GENE","PRODUCT"]].set_index("GENE").drop_duplicates()["PRODUCT"][geneName] # récupération des informations dans la colonne produit du gène
+				productInfos = self.abricateMatrix[["GENE","PRODUCT"]].drop_duplicates().set_index("GENE")["PRODUCT"][geneName] # récupération des informations dans la colonne produit du gène
 
 
 				dicoGenes[geneName].setName(geneName)
@@ -598,7 +602,8 @@ def main():
 
 	allGenesHeatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes), len(dicoGenes)) # construction de la heatmap pour tous les gènes
 
-	os.system("rm " + Arguments.abricateList)
+	if not Arguments.remove_input :
+		os.system("rm " + Arguments.abricateList)
 		
 	end = time.time()
 
