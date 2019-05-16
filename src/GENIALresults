@@ -38,6 +38,9 @@ def get_parser() :
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
 
+	parser.add_argument("--keep_input", action="store_true", dest="remove_input",
+                                        default=False, help="don't remove input file")
+
 	return parser
 
 
@@ -90,7 +93,7 @@ class genome(object) :
 			if geneName not in dicoGenes : # si le nom du gène n'est pas dans le dictionnaire des gènes création de l'objet gène correspondant
 				dicoGenes[geneName] = gene()
 
-				productInfos = self.abricateMatrix[["GENE","PRODUCT"]].set_index("GENE").drop_duplicates()["PRODUCT"][geneName] # récupération des informations dans la colonne produit du gène
+				productInfos = self.abricateMatrix[["GENE","PRODUCT"]].drop_duplicates().set_index("GENE")["PRODUCT"][geneName] # récupération des informations dans la colonne produit du gène
 
 				dicoGenes[geneName].setName(geneName)
 				dicoGenes[geneName].setDatabase(database)
@@ -270,18 +273,22 @@ def sortGenesByTypes(matrixAllGenes, dicoGenes, database) :
 
 		genesAndFamilies = vfFamilies + genesList # association de chaque gène à sa famille de facteur de virulence
 
-	matrixAllGenes.columns = genesAndFamilies # renomage des gènes par ces derniers sont associés à leur famille
 
-	matrixAllGenes = matrixAllGenes.sort_index(axis = 1) # tri des gènes par ordre alphabétique
+	if database == "resfinder" or database == "vfdb" :
+		matrixAllGenes.columns = genesAndFamilies # renomage des gènes par ces derniers sont associés à leur famille
 
-	genesAndFamilies = matrixAllGenes.columns # gènes avec leur familles
+		matrixAllGenes = matrixAllGenes.sort_index(axis = 1) # tri des gènes par ordre alphabétique
 
-	for genesAndFamily in genesAndFamilies :
+		genesAndFamilies = matrixAllGenes.columns # gènes avec leur familles
 
-		geneName = genesAndFamily.split("|")[-1] # gènes sans leur famille
-		newGenesList.append(geneName) # construction de la liste des gènes réordonnés
+		for genesAndFamily in genesAndFamilies :
 
-	matrixAllGenes.columns = newGenesList # renomage des gènes réordonés
+			geneName = genesAndFamily.split("|")[-1] # gènes sans leur famille
+			newGenesList.append(geneName) # construction de la liste des gènes réordonnés
+
+		matrixAllGenes.columns = newGenesList # renomage des gènes réordonés
+
+
 
 	return matrixAllGenes
 
@@ -595,7 +602,9 @@ def main():
 
 	allGenesHeatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes), len(dicoGenes)) # construction de la heatmap pour tous les gènes
 
-	os.system("rm " + Arguments.abricateList)
+
+	if not Arguments.remove_input :
+		os.system("rm " + Arguments.abricateList)
 		
 	end = time.time()
 
