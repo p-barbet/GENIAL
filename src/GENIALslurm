@@ -33,7 +33,7 @@ def get_parser() :
 
 	parser.add_argument("-strainid", action="store", dest="strainid", type=str, nargs='+', default="", help="strains'ID ")
 
-	parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="XXXX")
+	parser.add_argument("--overwitedb", action="store_true", dest="overwitedb", default=False, help="overwrite infos in the database")
 
 	parser.add_argument("--nowritedb", action="store_true", dest="nowritedb", default=True, help="don't write infos in the database")
 	
@@ -136,6 +136,8 @@ def genialSlurm(sbatchName, genialCmd, dependencies="", condaEnv = "genial_db", 
 	print(slurm_cmd)
 	return(re.findall(r'\d+',subprocess.check_output("".join(slurm_cmd), shell=True))[0])
 '''
+
+
 def genialSlurm(name,cmd,dependencies="",conda_env="genial_db",nbThreads=1,sync=0,mem=0 ):
 
 	sbash_file = name.replace('./','')
@@ -212,6 +214,14 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 			nbThreads + " -w " + genomeDir + " -r enterotox_staph --no_GENIALresult_file" 
 			# ajout du fichier à la liste des sbatch
 			sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_enterotox.sh") 
+
+
+		if dicoGenomes[genome].genre == "Salmonella" :
+			# commande enterotox_staph
+			spiCmd = "GENIALanalysis -f " + inputFile + " -defaultdb spi -T " + \
+			nbThreads + " -w " + genomeDir + " -r spi --no_GENIALresult_file" 
+			# ajout du fichier à la liste des sbatch
+			sbatchFiles.append(genomeDir + dicoGenomes[genome].ID + "_spi.sh") 
 		
 		# ajout id du job resfinder
 		jobIds.append(genialSlurm(sbatchFiles[0], resfinderCmd, nbThreads = nbThreads)) 
@@ -221,6 +231,10 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 		if dicoGenomes[genome].genre == "Staphylococcus" :
 			# ajout id du job enterotox_staph
 			jobIds.append(genialSlurm(sbatchFiles[2], enterotoxCmd, nbThreads = nbThreads)) 
+
+		if dicoGenomes[genome].genre == "Salmonella" :
+			# ajout id du job enterotox_staph
+			jobIds.append(genialSlurm(sbatchFiles[3], spiCmd, nbThreads = nbThreads)) 
 		
 	
 	# job vide pour que le programme attende la fin des jobs
@@ -254,6 +268,14 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 			new_enterotox_file = "DATA/GAMeR_DB/" + dicoGenomes[genome].genre.upper() + '/' + dicoGenomes[genome].ID + \
 			"/ABRicate/" +  "GENIAL_" + dicoGenomes[genome].ID + "_enterotox_staph.tsv"
 			insertMongo(MongoUser, MongoPwd, "enterotox_staph", new_enterotox_file,  dicoGenomes[genome].ID)
+
+		if dicoGenomes[genome].genre == "Salmonella" :
+			spi_file = genial_output_dir + "spi/Analysis_files/" + \
+			"GENIAL_" + dicoGenomes[genome].ID + "_spi.tsv"
+			os.system("mv " + spi_file + ' ' + finaldir)
+			new_spi_file = "DATA/GAMeR_DB/" + dicoGenomes[genome].genre.upper() + '/' + dicoGenomes[genome].ID + \
+			"/ABRicate/" +  "GENIAL_" + dicoGenomes[genome].ID + "_spi.tsv"
+			insertMongo(MongoUser, MongoPwd, "spi", new_spi_file,  dicoGenomes[genome].ID)
 		
 
 	# Suppression du dossier avec le résultat de toute sles souches
@@ -269,8 +291,6 @@ def insertMongo(MongoUser, MongoPwd, db_name, gene_file, strainid):
 	genomes = db.GENOME
 	
 	genomes.update({"SampleID":strainid}, {'$set':{'Gene.'+db_name:gene_file}})
-	
-	
 	
 	
 
