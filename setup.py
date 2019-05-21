@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GENIAL",
-    version="1.0.12",
+    version="1.0.13",
     author="Pauline Barbet, Arnaud Felten",
     author_email="pauline.barbet@anses.fr, arnaud.felten@anses.fr",
     description="GENIAL: GENes Indentification with Abricate for Lucky biologists",
