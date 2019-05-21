@@ -233,7 +233,7 @@ def runGENIAL(dicoGenomes, nas, nbThreads, workdir, resdir, MongoUser, MongoPwd)
 
 		if dicoGenomes[genome].genre == "Salmonella" :
 			# ajout id du job enterotox_staph
-			jobIds.append(genialSlurm(sbatchFiles[3], spiCmd, nbThreads = nbThreads)) 
+			jobIds.append(genialSlurm(sbatchFiles[2], spiCmd, nbThreads = nbThreads)) 
 		
 	
 	# job vide pour que le programme attende la fin des jobs
