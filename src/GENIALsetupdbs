@@ -11,11 +11,13 @@ abricatedbsPath = condaDirPath + "/db/"
 
 os.system("mkdir " + abricatedbsPath + "enterotox_staph/")
 os.system("mkdir " + abricatedbsPath + "phages/")
+os.system("mkdir " + abricatedbsPath + "spi/")
 os.system("rm " + abricatedbsPath + "resfinder/*")
 os.system("rm " + abricatedbsPath + "vfdb/*")
 
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/enterotox_staph/sequences " + abricatedbsPath + "enterotox_staph/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/phages/sequences " + abricatedbsPath + "phages/")
+os.system("cp " + condaDirPath + "/GENIALfiles/dbs/spi/sequences " + abricatedbsPath + "spi/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/resfinder/sequences " + abricatedbsPath + "resfinder/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/vfdb/sequences " + abricatedbsPath + "vfdb/")
 
