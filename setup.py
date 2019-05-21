@@ -29,7 +29,7 @@ setuptools.setup(
              "src/GENIAL_slurm.sh",
              "src/GENIALslurm",
              ],
-	data_files = [('GENIALfiles/dbs/enterotox_staph',['dbs/enterotox_staph/sequences']), ('GENIALfiles/dbs/resfinder',['dbs/resfinder/sequences']), ('GENIALfiles/dbs/vfdb',['dbs/vfdb/sequences']), ('GENIALfiles/dbs/phages',['dbs/phages/sequences']), ('GENIALfiles/',['dbs/vfdb/VFs.tsv'])],
+	data_files = [('GENIALfiles/dbs/enterotox_staph',['dbs/enterotox_staph/sequences']), ('GENIALfiles/dbs/resfinder',['dbs/resfinder/sequences']), ('GENIALfiles/dbs/vfdb',['dbs/vfdb/sequences']), ('GENIALfiles/dbs/phages',['dbs/phages/sequences']), ('GENIALfiles/dbs/spi',['dbs/spi/sequences']),('GENIALfiles/',['dbs/vfdb/VFs.tsv'])],
     include_package_data=True,
     install_requires=['pandas',   
                       'seaborn',
