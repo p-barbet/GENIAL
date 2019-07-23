@@ -130,8 +130,10 @@ Test
 
 ## Default database
 
-	python GENIAL -f input_file.tsv --defaultdb vfdb -r results_directory --minid 90 --mincov 80
+	python GENIAL -f input_file.tsv --defaultdb vfdb -T 10 -r results_directory --minid 90 --mincov 80
 
 ## Private database
 
-	python GENIAL -f input_file.tsv  --privatedb private_db_name -T 10 -r results_directory --minid 90 --mincov 80 -dbp path_to_abricate_databases_repertory -dbf private_db_multifasta_path
+	python GENIAL -f input_file.tsv  --privatedb private_db_name -dbf private_db_multifasta_path -T 10 -r results_directory --minid 90 --mincov 80
+
+
