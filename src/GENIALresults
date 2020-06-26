@@ -41,7 +41,8 @@ def get_parser() :
 	parser.add_argument("--keep_input", action="store_true", dest="remove_input",
                     default=False, help="don't remove input file")
 
-
+	parser.add_argument("--no_heatmap", action="store_true", dest="no_heatmap",
+                                        default=False, help="the heatmaps are not produced in output")
 
 	return parser
 
@@ -482,6 +483,9 @@ def allGenesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes, nbGenes) :
 		except TclError :
 			print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
 
+		except ValueError :
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
+
 	else :
 		try : 
 			heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(round(0.23*nbGenomes + 0.66), round(0.23*nbGenomes + 0.66)), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # construction de la heatmap
@@ -492,6 +496,9 @@ def allGenesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes, nbGenes) :
 
 		except TclError :
 			print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
+
+		except ValueError :
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
 
 
 # Fonction qui construit une heatmap par type de gènes
@@ -506,6 +513,10 @@ def genesTypesHeatmap(matrix, heatmapName, dirHeatmap, nbGenomes) :
 
 	except TclError :
 		print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
+
+	except ValueError :
+		print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
+
 
 
 
@@ -539,13 +550,17 @@ def main():
 	if not os.path.exists(WORKDIR + RESDIR) :
 		os.system("mkdir " + WORKDIR + RESDIR)
 		os.system("mkdir " + WORKDIR + RESDIR + "Matricies/")
-		os.system("mkdir " + WORKDIR + RESDIR + "Heatmaps/")
+
+		if not Arguments.no_heatmap :
+			os.system("mkdir " + WORKDIR + RESDIR + "Heatmaps/")
 
 	else : 
 		if not os.path.exists(WORKDIR + RESDIR + "Matricies/") :
 			os.system("mkdir " + WORKDIR + RESDIR + "Matricies/")
-		if not os.path.exists(WORKDIR + RESDIR + "Heatmaps/") :
-			os.system("mkdir " + WORKDIR + RESDIR + "Heatmaps/")
+
+		if not Arguments.no_heatmap :
+			if not os.path.exists(WORKDIR + RESDIR + "Heatmaps/") :
+				os.system("mkdir " + WORKDIR + RESDIR + "Heatmaps/")
 
 
 	DIR_MATRIX = WORKDIR + RESDIR + "Matricies/" # chemin de destination des matrices
@@ -566,7 +581,8 @@ def main():
 
 			writeMatrix(matrixByGenesTypes, "matrix_by_gene_type.tsv", DIR_MATRIX, True) # ecriture de la matrice par type de gènes
 
-			genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
+			if not Arguments.no_heatmap :
+				genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		elif Arguments.defaultDatabase == "vfdb" : 
 
@@ -579,7 +595,8 @@ def main():
 
 			writeMatrix(matrixByGenesTypes, "matrix_by_gene_type.tsv", DIR_MATRIX, True) # ecriture de la matrice par type de gènes
 
-			genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
+			if not Arguments.no_heatmap :
+				genesTypesHeatmap(matrixByGenesTypes, "heatmap_by_gene_type.png", DIR_HEATMAP, len(dicoGenomes)) # construction de la heatmap par type de gènes
 
 		else : 
 
@@ -600,7 +617,8 @@ def main():
 	writeMatrix(matrixAllGenes, "matrix_all_genes.tsv", DIR_MATRIX, True) # ecriture de la matrice pour tous les gènes
 	writeMatrix(corTable, "correspondance_table.tsv", DIR_MATRIX, False) # ecriture la table de correspondance
 
-	allGenesHeatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes), len(dicoGenes)) # construction de la heatmap pour tous les gènes
+	if not Arguments.no_heatmap :
+		allGenesHeatmap(matrixAllGenes, "heatmap_all_genes.png", DIR_HEATMAP, len(dicoGenomes), len(dicoGenes)) # construction de la heatmap pour tous les gènes
 
 	if not Arguments.remove_input :
 		os.system("rm " + Arguments.abricateList)

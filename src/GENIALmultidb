@@ -41,20 +41,42 @@ def get_parser() :
 	parser.add_argument("--R", action="store_true", dest="remove",
 					default=False, help="remove genes present in all genomes from the matrix")
 
+	parser.add_argument("--no_heatmap", action="store_true", dest="no_heatmap",
+                                        default=False, help="the heatmaps are not produced in output")
+
 	return parser
 
 
-def heatmap(matrix, heatmapName, dirHeatmap, nbGenes) :
+def heatmap(matrix, heatmapName, dirHeatmap, nbGenes, , nbGenomes) :
 
-	try : 
-		heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(round(0.23*nbGenes + 0.66), round(0.23*nbGenes + 0.66)), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # construction de la heatmap
-		heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
+	if nbGenes > nbGenomes :
+		try : 
+			heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(round(0.23*nbGenes + 0.66), round(0.23*nbGenes + 0.66)), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # construction de la heatmap
+			heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
 
-	except RecursionError : 
-		print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
+		except RecursionError : 
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
 
-	except TclError :
-		print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
+		except TclError :
+			print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
+
+		except ValueError :
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
+
+	else :
+		try : 
+			heatmap = sns.clustermap(matrix, metric="euclidean", method="average", figsize=(round(0.23*nbGenomes + 0.66), round(0.23*nbGenomes + 0.66)), linewidths=.003, col_cluster = False, yticklabels=True, cmap = "Greys")  # construction de la heatmap
+			heatmap.savefig(dirHeatmap + heatmapName) # sauvegarde de la heatmap dans un png
+
+		except RecursionError : 
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
+
+		except TclError :
+			print("The heatmap building requires too much memory") # affichage d'un message d'erreur si la matrice est trop grande
+
+		except ValueError :
+			print("The matrix is ​​too big for the heatmap building") # affichage d'un message d'erreur si la matrice est trop grande
+
 
 
 def main():
@@ -96,10 +118,18 @@ def main():
 
 		if os.path.isfile(WORKDIR + RESDIR + db + "/ABRicate_files.tsv") :  # Vérifie que le fichier abricate_files.tsv existe
 			if Arguments.remove :
-				os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " -defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --R")
+				if Arguments.no_heatmap :
+					os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " -defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --R --no_heatmap")
+
+				else :
+					os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " -defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + " --R")
 
 			else :
-				os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " -defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db)
+				if Arguments.no_heatmap :
+					os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " -defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db + "--no_heatmap")
+
+				else :
+					os.system("GENIALresults -f " + WORKDIR + RESDIR + db + "/ABRicate_files.tsv " + " -defaultdb " + db + " -w " + WORKDIR + RESDIR + " -r " + db)
 		
 		try :
 			matrix  = pd.read_csv(WORKDIR + RESDIR + db + "/Matricies/matrixAllGenes.tsv", sep = "\t", index_col = 0, dtype = str)
@@ -107,6 +137,8 @@ def main():
 			break
 
 		genes = matrix.columns # liste des gènes
+
+		genomes = matrix.index
 
 		for gene in genes : # pour chaque gène
 
@@ -124,7 +156,7 @@ def main():
 
 		matrix = matrix[matrix.columns].astype(int)
 
-		heatmap(matrix, "heatmapAllDatabases.png", WORKDIR + RESDIR, len(genes))
+		heatmap(matrix, "heatmapAllDatabases.png", WORKDIR + RESDIR, len(genes), len(genomes))
 	else :
 		os.system("rm -r " + WORKDIR + RESDIR)
 
