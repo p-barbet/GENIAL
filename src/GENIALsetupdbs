@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/genome/Anaconda3/envs/genial-1.0.0/bin/python
 # -*- coding: utf-8 -*-
 
 import os
@@ -15,10 +15,11 @@ os.system("mkdir " + abricatedbsPath + "spi/")
 os.system("rm " + abricatedbsPath + "resfinder/*")
 os.system("rm " + abricatedbsPath + "vfdb/*")
 
+
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/enterotox_staph/sequences " + abricatedbsPath + "enterotox_staph/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/phages/sequences " + abricatedbsPath + "phages/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/spi/sequences " + abricatedbsPath + "spi/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/resfinder/sequences " + abricatedbsPath + "resfinder/")
 os.system("cp " + condaDirPath + "/GENIALfiles/dbs/vfdb/sequences " + abricatedbsPath + "vfdb/")
 
-os.system("abricate --setupdb")
+os.system("abricate --setupdb --datadir " + abricatedbsPath)
