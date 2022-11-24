@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/genome/Anaconda3/envs/genial-1.0.0/bin/python
 # -*- coding: iso-8859-1 -*-
 
 import os, sys, time
@@ -204,7 +204,7 @@ def setupdb(dbName, abricateDbsRepertory, dbMultifasta) :
 
 	os.system("cp " + dbMultifasta + " " + abricateDbsRepertory + dbName) # copie du multifasta dans le répartoire abricate
 
-	os.system("abricate --setupdb") # idexation de la base dans abricate
+	os.system("abricate --setupdb --datadir "+ abricateDbsRepertory) # idexation de la base dans abricate
 
 
 def main():
