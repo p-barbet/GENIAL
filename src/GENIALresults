@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/genome/Anaconda3/envs/genial-1.0.0/bin/python
 # -*- coding: utf-8 -*-
 
 
@@ -368,7 +368,7 @@ def getVfdbCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	speciesNames = [] # nom des espèces
 	number = [] # effectifs des gènes
 
-	corTable = pd.DataFrame(columns = ["Genes", "Species", "VF names", "VF families", "Number"]) # dataframe vide avec 5 colonnes
+	corTable = pd.DataFrame(columns = ["Genes", "Species", "VF names", "VF families", "Number"],dtype=object) # dataframe vide avec 5 colonnes
 
 	genesList = matrixAllGenes.columns # gènes
 
@@ -406,7 +406,7 @@ def getResfinderCorrespondanceTable(matrixAllGenes, dicoGenes) :
 	antibioticFamilies = [] # familles d'natibiotiques
 	number = [] # effecyifs des gènes
 
-	corTable = pd.DataFrame(columns = ["Genes", "Antibiotic families", "Number"]) # dataframe vide avec 3 colonnes
+	corTable = pd.DataFrame(columns = ["Genes", "Antibiotic families", "Number"],dtype=object) # dataframe vide avec 3 colonnes
 
 	genesList = matrixAllGenes.columns # gènes
 
